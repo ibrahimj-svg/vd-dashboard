@@ -1,0 +1,5 @@
+{
+  "portalTheme": "dark",
+  "clientSidePersistence": true,
+  "refreshIntervalSeconds": 30
+}
