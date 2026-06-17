@@ -3,7 +3,12 @@
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"  // Place this at the very beginning of the <script> block inside index.html
+(function secureGateway() {
+    if (!sessionStorage.getItem('currentUser')) {
+        window.location.href = 'login.html';
+    }
+})();></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#0b0e11;--s1:#161a1e;--s2:#1e2329;--s3:#2b3139;--s4:#363c45;--b1:rgba(255,255,255,.06);--b2:rgba(255,255,255,.1);--gn:#0ecb81;--gna:rgba(14,203,129,.12);--gnb:rgba(14,203,129,.06);--rd:#f6465d;--rda:rgba(246,70,93,.12);--yw:#f0b90b;--ywa:rgba(240,185,11,.1);--bl:#1890ff;--bla:rgba(24,144,255,.12);--tx:#b7bdc6;--wh:#eaecef;--mt:#848e9c;--r:6px}
