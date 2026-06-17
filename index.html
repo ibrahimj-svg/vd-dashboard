@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0b0e11;--s1:#161a1e;--s2:#1e2329;--s3:#2b3139;--s4:#363c45;--b1:rgba(255,255,255,.06);--b2:rgba(255,255,255,.1);--gn:#0ecb81;--gna:rgba(14,203,129,.12);--gnb:rgba(14,203,129,.06);--rd:#f6465d;--rda:rgba(246,70,93,.12);--yw:#f0b90b;--ywa:rgba(240,185,11,.1);--bl:#1890ff;--bla:rgba(24,144,255,.12);--tx:#b7bdc6;--wh:#eaecef;--mt:#848e9c;--r:6px}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);font-size:12px;min-height:100vh;overflow-x:hidden}
+#shell{display:flex;min-height:100vh}
+.sb{width:52px;background:var(--s1);border-right:1px solid var(--b1);display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:3px;flex-shrink:0;position:sticky;top:0;height:100vh;z-index:50}
+.sb-icon{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;color:var(--mt);transition:.15s;position:relative}
+.sb-icon:hover{background:var(--s3);color:var(--wh)}.sb-icon.on{background:var(--gna);color:var(--gn)}
+.sb-icon .tip{position:absolute;left:48px;background:var(--s3);color:var(--wh);font-size:10px;padding:4px 8px;border-radius:4px;white-space:nowrap;opacity:0;pointer-events:none;transition:.15s;z-index:100;border:1px solid var(--b2)}
+.sb-icon:hover .tip{opacity:1}
+.sb-div{width:24px;height:1px;background:var(--b1);margin:4px 0}
+.right{flex:1;display:flex;flex-direction:column;min-width:0}
+.topbar{height:52px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;padding:0 16px;gap:8px;position:sticky;top:0;z-index:40;overflow-x:auto}
+.logo{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.logo-box{width:26px;height:26px;background:var(--yw);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#000}
+.tb-tab{display:inline-flex;align-items:center;gap:4px;padding:5px 9px;font-size:11px;font-weight:500;color:var(--mt);cursor:pointer;border-radius:4px;transition:.15s;white-space:nowrap;flex-shrink:0}
+.tb-tab:hover{color:var(--wh)}.tb-tab.on{color:var(--wh);background:var(--s3)}
+.tb-div{width:1px;height:18px;background:var(--b2);flex-shrink:0}
+.tb-r{margin-left:auto;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.btn{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:4px;font-size:11px;font-weight:600;border:none;cursor:pointer;font-family:'Inter',sans-serif;transition:.15s;white-space:nowrap}
+.btn-o{background:var(--s3);color:var(--tx);border:1px solid var(--b2)}.btn-o:hover{background:var(--s4);color:var(--wh)}
+.btn-g{background:var(--gn);color:#000}.btn-g:hover{opacity:.9}
+.btn-b{background:var(--bl);color:#fff}.btn-r{background:var(--rd);color:#fff}
+.btn-sm{padding:3px 9px;font-size:10px}
+.main{flex:1;overflow-y:auto;background:var(--bg)}
+.page-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 0;flex-wrap:wrap;gap:8px}
+.page-title{font-size:15px;font-weight:700;color:var(--wh);letter-spacing:-.3px}
+.page-sub{font-size:10px;color:var(--mt);margin-top:1px}
+.stat-strip{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--b1)}
+.sc{padding:14px 18px;border-right:1px solid var(--b1)}
+.sc:last-child{border-right:none}
+.sc-lbl{font-size:10px;color:var(--mt);margin-bottom:3px}
+.sc-val{font-size:20px;font-weight:700;color:var(--wh);line-height:1;letter-spacing:-.5px}
+.sc-sub{font-size:9px;color:var(--mt);margin-top:2px}
+.sc-badge{display:inline-flex;align-items:center;padding:2px 6px;border-radius:3px;font-size:9px;font-weight:600}
+.chart-wrap{position:relative;height:200px;background:var(--s1);border:1px solid var(--b1);border-top:none}
+.chart-tabs{display:flex;border-bottom:1px solid var(--b1);padding-left:18px;background:var(--s1)}
+.ctab{padding:9px 13px;font-size:11px;font-weight:500;color:var(--mt);cursor:pointer;border-bottom:2px solid transparent;transition:.15s;white-space:nowrap}
+.ctab:hover{color:var(--wh)}.ctab.on{color:var(--wh);border-bottom-color:var(--gn)}
+.chart-legend{display:flex;gap:12px;padding:7px 12px;background:var(--s1);border:1px solid var(--b1);border-top:none;font-size:9px;color:var(--mt);flex-wrap:wrap}
+.row{display:grid;gap:1px;background:var(--b1);margin-top:1px}
+.row.two{grid-template-columns:1fr 1fr}.row.three{grid-template-columns:1fr 1fr 1fr}.row.four{grid-template-columns:repeat(4,1fr)}
+.panel{background:var(--bg);padding:14px 18px}
+.ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.pt{font-size:12px;font-weight:600;color:var(--wh)}.ps{font-size:10px;color:var(--mt)}
+.tbl{width:100%;border-collapse:collapse;font-size:11px}
+.tbl th{padding:6px 9px;text-align:left;color:var(--mt);font-weight:500;border-bottom:1px solid var(--b1);font-size:9px;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+.tbl td{padding:6px 9px;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}.tbl tr:hover td{background:rgba(255,255,255,.015)}
+.bdg{display:inline-flex;align-items:center;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:600}
+.bg{background:var(--gna);color:var(--gn)}.by{background:var(--ywa);color:var(--yw)}.bb{background:var(--bla);color:var(--bl)}.br{background:var(--rda);color:var(--rd)}
+.inp{background:var(--s3);border:1px solid var(--b1);border-radius:4px;padding:5px 9px;font-size:11px;color:var(--wh);font-family:'Inter',sans-serif}
+.inp:focus{outline:none;border-color:rgba(14,203,129,.4)}.inp::placeholder{color:var(--mt)}
+select.inp option{background:var(--s2)}
+input[type=date].inp::-webkit-calendar-picker-indicator{filter:invert(.5);cursor:pointer}
+/* Progress slider */
+.pslider{-webkit-appearance:none;appearance:none;height:4px;border-radius:999px;background:var(--s4);cursor:pointer;width:78px;vertical-align:middle}
+.pslider::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--gn);cursor:pointer;box-shadow:0 0 5px rgba(14,203,129,.5)}
+/* Member card */
+.mcard{background:var(--s1);border:1px solid var(--b1);border-radius:8px;padding:12px;cursor:pointer;transition:.15s;position:relative;overflow:hidden}
+.mcard:hover{border-color:rgba(14,203,129,.3)}.mcard.sel{border-color:var(--gn)}
+.mcard-accent{position:absolute;top:0;left:0;right:0;height:2px}
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+/* Drop zone */
+.dz{border:1.5px dashed rgba(14,203,129,.3);border-radius:6px;padding:26px 18px;text-align:center;cursor:pointer;position:relative;background:var(--gnb);transition:.15s}
+.dz:hover,.dz.drag{border-color:var(--gn);background:var(--gna)}
+.dz input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.fi-row{display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--s2);border:1px solid var(--b1);border-radius:4px;margin-top:5px}
+.fi-prog{height:2px;background:var(--s3);border-radius:999px;margin-top:3px}
+.fi-bar{height:2px;border-radius:999px;background:var(--gn);transition:width .4s}
+.ai-box{background:var(--s2);border:1px solid var(--b1);border-radius:4px;padding:12px;font-size:11px;line-height:1.85;color:var(--tx)}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-thumb{background:var(--s4);border-radius:2px}
+</style>
+</head>
+<body>
+<div id="shell">
+<nav class="sb">
+  <div class="logo-box" style="margin-bottom:6px">VD</div>
+  <div class="sb-div"></div>
+  <div class="sb-icon on" onclick="go('ov',this)">⬡<span class="tip">Overview</span></div>
+  <div class="sb-icon" onclick="go('tk',this)">≡<span class="tip">All Tasks</span></div>
+  <div class="sb-icon" onclick="go('pf',this)">◎<span class="tip">Performance</span></div>
+  <div class="sb-icon" onclick="go('tl',this)">▤<span class="tip">Timeline</span></div>
+  <div class="sb-div"></div>
+  <div class="sb-icon" onclick="go('mb',this)">👥<span class="tip">Members</span></div>
+  <div class="sb-icon" onclick="go('rp',this)">📄<span class="tip">Reports</span></div>
+  <div class="sb-div"></div>
+  <div class="sb-icon" onclick="go('im',this)">⬆<span class="tip">Import Excel</span></div>
+  <div class="sb-icon" onclick="go('ai',this)">✦<span class="tip">AI Analysis</span></div>
+</nav>
+
+<div class="right">
+<header class="topbar">
+  <div class="logo"><div class="logo-box">VD</div><div><div style="font-size:12px;font-weight:800;color:var(--wh)">VDartinc</div><div style="font-size:9px;color:var(--mt)">GCC IT Portal</div></div></div>
+  <div class="tb-div"></div>
+  <div class="tb-tab on" onclick="go('ov',null);setTab(this)">Overview</div>
+  <div class="tb-tab" onclick="go('tk',null);setTab(this)">Tasks</div>
+  <div class="tb-tab" onclick="go('pf',null);setTab(this)">Performance</div>
+  <div class="tb-tab" onclick="go('tl',null);setTab(this)">Timeline</div>
+  <div class="tb-tab" onclick="go('mb',null);setTab(this)">👥 Members</div>
+  <div class="tb-tab" onclick="go('rp',null);setTab(this)">📄 Reports</div>
+  <div class="tb-tab" onclick="go('im',null);setTab(this)">⬆ Import</div>
+  <div class="tb-tab" onclick="go('ai',null);setTab(this)">✦ AI</div>
+  <div class="tb-r">
+    <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--mt)"><div style="width:6px;height:6px;border-radius:50%;background:var(--gn);animation:blink 2s infinite"></div>Live</div>
+    <div class="tb-div"></div>
+    <span style="font-size:10px;color:var(--mt)" id="clk"></span>
+    <div class="tb-div"></div>
+    <div class="av" id="cur-av" style="width:26px;height:26px;font-size:10px"></div>
+    <select class="inp" id="user-sel" onchange="switchUser(+this.value)" style="font-size:10px;padding:3px 7px;max-width:160px;height:26px"></select>
+    <div class="tb-div"></div>
+    <button class="btn btn-o btn-sm" onclick="exportCSV()">↓ CSV</button>
+    <button class="btn btn-g btn-sm" onclick="dlFile()">⬇ Download</button>
+  </div>
+</header>
+<div class="main" id="main">
+
+<!-- ═══ OVERVIEW ═══ -->
+<div id="pg-ov">
+  <div class="stat-strip">
+    <div class="sc"><div class="sc-lbl">Total Tasks</div><div class="sc-val" id="k1">0</div><div class="sc-sub" id="k1s">No tasks yet</div></div>
+    <div class="sc"><div class="sc-lbl">Avg Progress</div><div class="sc-val" style="color:var(--gn)" id="k2">0%</div><div class="sc-sub" id="k2s">—</div></div>
+    <div class="sc"><div class="sc-lbl">Avg Score</div><div class="sc-val" style="color:var(--yw)" id="k3">—</div><div class="sc-sub" id="k3s">—</div></div>
+    <div class="sc"><div class="sc-lbl">Overdue / Done</div><div class="sc-val" id="k4">0 / 0</div><div class="sc-sub" id="k4s">—</div></div>
+  </div>
+  <div>
+    <div class="chart-tabs" style="position:relative">
+      <div class="ctab on" onclick="setCT(this,'sc')">Score</div>
+      <div class="ctab" onclick="setCT(this,'pr')">Progress</div>
+      <div class="ctab" onclick="setCT(this,'dy')">Active Days</div>
+      <div class="ctab" onclick="setCT(this,'rd')">Radar</div>
+      <div class="ctab" onclick="setCT(this,'mb')">By Member</div>
+      <div style="margin-left:auto;display:flex;gap:5px;align-items:center;padding-right:12px">
+        <select class="inp" id="cf" onchange="refreshAll()" style="font-size:10px;padding:3px 7px;height:26px"><option value="">All Categories</option><option>Hardware</option><option>Software</option><option>Network</option><option>Inventory Management</option><option>VAPT</option><option>SOC Checklist</option><option>ManageEngine</option><option>Projects</option><option>SOPHOS</option><option>Wazuh</option><option>GOPhish</option></select>
+        <select class="inp" id="pf" onchange="refreshAll()" style="font-size:10px;padding:3px 7px;height:26px"><option value="">All Priority</option><option>High</option><option>Medium</option><option>Low</option></select>
+        <select class="inp" id="mf" onchange="refreshAll()" style="font-size:10px;padding:3px 7px;height:26px"><option value="">All Members</option></select>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="c-main"></canvas></div>
+    <div class="chart-legend" id="main-leg"></div>
+  </div>
+  <div class="row two">
+    <div class="panel">
+      <div class="ph"><span class="pt">Category Breakdown</span><span class="ps" id="cat-cnt">—</span></div>
+      <table class="tbl"><thead><tr><th>Category</th><th>Tasks</th><th>Avg Score</th><th>Avg Progress</th><th>Bar</th></tr></thead><tbody id="cat-body"></tbody></table>
+    </div>
+    <div class="panel">
+      <div class="ph"><span class="pt">Top Tasks by Score</span><span class="ps" id="top-cnt">—</span></div>
+      <div id="top-bars"></div>
+    </div>
+  </div>
+  <div class="row three">
+    <div class="panel"><div class="ph"><span class="pt">Priority Split</span></div><div style="height:130px;position:relative"><canvas id="c-prio"></canvas></div></div>
+    <div class="panel"><div class="ph"><span class="pt">Progress Distribution</span></div><div style="height:130px;position:relative"><canvas id="c-pdist"></canvas></div></div>
+    <div class="panel"><div class="ph"><span class="pt">Status Overview</span></div><div style="display:flex;justify-content:space-around;align-items:center;height:130px" id="st-rings"></div></div>
+  </div>
+  <div class="row"><div class="panel">
+    <div class="ph"><span class="pt">Task List</span><span class="ps" id="ov-cnt">—</span></div>
+    <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>#</th><th>Task</th><th>Member</th><th>Category</th><th>Priority</th><th>Progress</th><th>Status</th><th>Deadline</th><th>Score</th></tr></thead><tbody id="ov-body"></tbody></table></div>
+  </div></div>
+</div>
+
+<!-- ═══ ALL TASKS ═══ -->
+<div id="pg-tk" style="display:none">
+  <div class="page-hdr">
+    <div><div class="page-title">All Tasks</div><div class="page-sub" id="tk-meta">—</div></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+      <input class="inp" id="tk-q" placeholder="Search…" style="width:130px" oninput="renderTasks()"/>
+      <select class="inp" id="tk-cf" onchange="renderTasks()" style="width:120px"><option value="">All Categories</option><option>Hardware</option><option>Software</option><option>Network</option><option>Inventory Management</option><option>VAPT</option><option>SOC Checklist</option><option>ManageEngine</option><option>Projects</option><option>SOPHOS</option><option>Wazuh</option><option>GOPhish</option></select>
+      <select class="inp" id="tk-mf" onchange="renderTasks()" style="width:140px"><option value="">All Members</option></select>
+      <select class="inp" id="tk-sf" onchange="renderTasks()" style="width:115px"><option value="">All Status</option><option>Not Started</option><option>In Progress</option><option>Completed</option><option>Overdue</option></select>
+      <button class="btn btn-g btn-sm" onclick="tgl('atk-panel');updateTaskCatOptions()">+ Add Task</button>
+    </div>
+  </div>
+  <!-- Add task form -->
+  <div id="atk-panel" style="display:none;margin:10px 18px 0;background:var(--s2);border:1px solid var(--b1);border-radius:6px;padding:14px">
+    <div style="font-size:11px;font-weight:600;color:var(--wh);margin-bottom:10px">New Task</div>
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px">
+      <div><label style="font-size:9px;color:var(--mt);display:block;margin-bottom:2px">Task Name *</label><input class="inp" id="nt-nm" placeholder="Task name" style="width:100%"/></div>
+      <div><label style="font-size:9px;color:var(--mt);display:block;margin-bottom:2px">Category</label><select class="inp" id="nt-cat" style="width:100%"><option>Hardware</option><option>Software</option><option>Network</option><option>Inventory Management</option></select></div>
+      <div><label style="font-size:9px;color:var(--mt);display:block;margin-bottom:2px">Priority</label><select class="inp" id="nt-prio" style="width:100%"><option>High</option><option selected>Medium</option><option>Low</option></select></div>
+      <div><label style="font-size:9px;color:var(--mt);display:block;margin-bottom:2px">Active Days</label><input class="inp" id="nt-days" type="number" value="1" min="1" style="width:100%"/></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+      <div><label style="font-size:9px;color:var(--mt);display:block;margin-bottom:2px">Assigned To *</label><select class="inp" id="nt-to" style="width:100%" onchange="updateTaskCatOptions()"></select></div>
+      <div><label style="font-size:9px;color:var(--mt);display:block;margin-bottom:2px">IT SPOC</label><select class="inp" id="nt-spoc" style="width:100%"></select></div>
+      <div><label style="font-size:9px;color:var(--mt);display:block;margin-bottom:2px">Start Date</label><input class="inp" id="nt-sd" type="date" style="width:100%"/></div>
+      <div><label style="font-size:9px;color:var(--mt);display:block;margin-bottom:2px">End Date</label><input class="inp" id="nt-ed" type="date" style="width:100%"/></div>
+      <div><label style="font-size:9px;color:var(--mt);display:block;margin-bottom:2px">Deadline</label><input class="inp" id="nt-dl" type="date" style="width:100%"/></div>
+      <div><label style="font-size:9px;color:var(--mt);display:block;margin-bottom:2px">Progress: <span id="nt-plbl" style="color:var(--gn);font-weight:700">0%</span></label><input type="range" id="nt-prog" min="0" max="100" value="0" oninput="$('nt-plbl').textContent=this.value+'%'" class="pslider" style="width:100%;margin-top:6px"/></div>
+    </div>
+    <div style="display:flex;gap:7px"><button class="btn btn-g btn-sm" onclick="addTask()">💾 Save Task</button><button class="btn btn-o btn-sm" onclick="tgl('atk-panel')">Cancel</button></div>
+  </div>
+  <div style="padding:10px 18px 0;overflow-x:auto">
+    <table class="tbl" style="min-width:1100px">
+      <thead><tr><th style="width:50px">Order</th><th>#</th><th>Task Name</th><th>Assigned To</th><th>Category</th><th>Priority</th><th style="min-width:160px">Progress (live)</th><th>Status</th><th>IT SPOC</th><th>Start</th><th>End</th><th>Deadline</th><th>Score</th><th></th></tr></thead>
+      <tbody id="tk-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ PERFORMANCE ═══ -->
+<div id="pg-pf" style="display:none">
+  <div class="page-hdr"><div><div class="page-title">Performance Analytics</div><div class="page-sub">Deep-dive metrics</div></div></div>
+  <div style="margin-top:10px">
+    <div class="row two">
+      <div class="panel"><div class="ph"><span class="pt">Radar — Perf · Eff · Time</span><div style="display:flex;gap:8px;font-size:9px"><span style="color:var(--gn)">● Perf</span><span style="color:var(--yw)">● Eff</span><span style="color:var(--bl)">● Time</span></div></div><div style="height:240px;position:relative"><canvas id="c-radar"></canvas></div></div>
+      <div class="panel"><div class="ph"><span class="pt">Efficiency vs Days</span><span class="ps">Scatter</span></div><div style="height:240px;position:relative"><canvas id="c-scat"></canvas></div></div>
+    </div>
+    <div class="row two">
+      <div class="panel"><div class="ph"><span class="pt">Category Comparison</span><div style="font-size:9px;display:flex;gap:8px"><span style="color:var(--gn)">● Score</span><span style="color:var(--yw)">● Eff</span><span style="color:var(--bl)">● Progress</span></div></div><div style="height:190px;position:relative"><canvas id="c-ccat"></canvas></div></div>
+      <div class="panel"><div class="ph"><span class="pt">Score Trend</span></div><div style="height:190px;position:relative"><canvas id="c-strend"></canvas></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TIMELINE ═══ -->
+<div id="pg-tl" style="display:none">
+  <div class="page-hdr"><div><div class="page-title">Task Timeline</div><div class="page-sub">Duration & deadline tracking</div></div></div>
+  <div style="padding:12px 18px 0">
+    <div class="row two" style="margin:0 0 1px">
+      <div class="panel" style="background:var(--s1)"><div class="ph"><span class="pt">Duration Breakdown</span></div><div id="tl-bars"></div></div>
+      <div class="panel" style="background:var(--s1)"><div class="ph"><span class="pt">Progress vs Days</span></div><div style="height:240px;position:relative"><canvas id="c-tlmain"></canvas></div></div>
+    </div>
+    <div class="row three" style="margin:0">
+      <div class="panel" style="background:var(--s1)"><div class="ph"><span class="pt">Avg Days by Category</span></div><div style="height:150px;position:relative"><canvas id="c-daycat"></canvas></div></div>
+      <div class="panel" style="background:var(--s1)"><div class="ph"><span class="pt">Duration Buckets</span></div><div style="height:150px;position:relative"><canvas id="c-bucket"></canvas></div></div>
+      <div class="panel" style="background:var(--s1)"><div class="ph"><span class="pt">Fastest / Slowest</span></div><div id="fast-slow" style="font-size:11px"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MEMBERS ═══ -->
+<div id="pg-mb" style="display:none">
+  <div class="stat-strip">
+    <div class="sc"><div class="sc-lbl">Team Members</div><div class="sc-val" style="color:var(--bl)" id="ms1">8</div><div class="sc-sub">1 Admin · 7 Engineers</div></div>
+    <div class="sc"><div class="sc-lbl">Total Tasks</div><div class="sc-val" style="color:var(--gn)" id="ms2">—</div><div class="sc-sub" id="ms2s">—</div></div>
+    <div class="sc"><div class="sc-lbl">Team Avg Progress</div><div class="sc-val" style="color:var(--yw)" id="ms3">—</div><div class="sc-sub" id="ms3s">—</div></div>
+    <div class="sc"><div class="sc-lbl">Completion Rate</div><div class="sc-val" style="color:var(--gn)" id="ms4">—</div><div class="sc-sub" id="ms4s">—</div></div>
+  </div>
+  <div style="padding:14px 18px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="font-size:12px;font-weight:600;color:var(--wh)">Team Members</div>
+      <button class="btn btn-g btn-sm" onclick="tgl('am-panel')">+ Add Member</button>
+    </div>
+    <!-- Add member form -->
+    <div id="am-panel" style="display:none;background:var(--s2);border:1px solid var(--b1);border-radius:6px;padding:12px;margin-bottom:12px">
+      <div style="font-size:11px;font-weight:600;color:var(--wh);margin-bottom:8px">Add New Member</div>
+      <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px">
+        <div><label style="font-size:9px;color:var(--mt);display:block;margin-bottom:2px">Full Name *</label><input class="inp" id="nm-name" placeholder="Full name" style="width:100%"/></div>
+        <div><label style="font-size:9px;color:var(--mt);display:block;margin-bottom:2px">Role</label><input class="inp" id="nm-role" placeholder="e.g. L1 Engineer" style="width:100%"/></div>
+        <div><label style="font-size:9px;color:var(--mt);display:block;margin-bottom:2px">Department</label><input class="inp" id="nm-dept" placeholder="e.g. IT Support" style="width:100%"/></div>
+        <div><label style="font-size:9px;color:var(--mt);display:block;margin-bottom:2px">Accent Color</label>
+          <select class="inp" id="nm-clr" style="width:100%">
+            <option value="#0ecb81">Green</option><option value="#1890ff">Blue</option><option value="#f0b90b">Yellow</option>
+            <option value="#f6465d">Red</option><option value="#a78bfa">Purple</option><option value="#fb923c">Orange</option>
+            <option value="#22d3ee">Cyan</option><option value="#84cc16">Lime</option><option value="#e879f9">Pink</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;gap:7px"><button class="btn btn-g btn-sm" onclick="addMember()">Add Member</button><button class="btn btn-o btn-sm" onclick="tgl('am-panel')">Cancel</button></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px" id="member-grid"></div>
+    <div id="mb-detail" style="display:none;margin-top:12px;background:var(--s1);border:1px solid var(--b1);border-radius:6px;padding:14px">
+      <div class="ph"><span class="pt" id="mbd-title">Tasks</span><button class="btn btn-o btn-sm" onclick="$('mb-detail').style.display='none'">✕</button></div>
+      <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>#</th><th>Task</th><th>Category</th><th>Priority</th><th>Progress</th><th>Status</th><th>IT SPOC</th><th>Deadline</th><th>Score</th></tr></thead><tbody id="mbd-body"></tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ REPORTS ═══ -->
+<div id="pg-rp" style="display:none">
+  <div class="page-hdr">
+    <div><div class="page-title">Weekly Reports</div><div class="page-sub" id="rp-sub">Auto-scheduled every Monday · Full task details per member</div></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+      <select class="inp" id="rp-range" style="width:130px"><option value="7">This week (7d)</option><option value="14">Last 14 days</option><option value="30">Last 30 days</option></select>
+      <button class="btn btn-g" onclick="genAllReports()">⬇ Generate All Reports</button>
+      <button class="btn btn-b btn-sm" onclick="goAI('weekly')">✦ AI Digest</button>
+    </div>
+  </div>
+  <div style="padding:12px 18px">
+    <div style="background:var(--s2);border:1px solid var(--b1);border-radius:6px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <div style="font-size:11px;color:var(--tx)">Reports include: task list, progress, categories, SPOC breakdown, overdue analysis, performance scores, AI-generated insights per member</div>
+      <div style="display:flex;gap:6px">
+        <span class="sc-badge" style="background:var(--gna);color:var(--gn)" id="rp-last">Never generated</span>
+        <span class="sc-badge" style="background:var(--ywa);color:var(--yw)" id="rp-next">Next: Monday</span>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px" id="rp-cards"></div>
+    <div style="margin-top:12px;background:var(--s1);border:1px solid var(--b1);border-radius:6px;padding:14px">
+      <div class="ph"><span class="pt">Report Preview</span><span class="ps" id="rp-prev-lbl">Click a member card to preview</span></div>
+      <div id="rp-preview" style="font-size:11px;color:var(--mt);padding:12px;text-align:center">Select a member above to preview their weekly report</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ IMPORT ═══ -->
+<div id="pg-im" style="display:none">
+  <div class="page-hdr"><div><div class="page-title">Import Data</div><div class="page-sub">Excel (.xlsx/.xls) · CSV · Auto column detection · Seamless ingestion</div></div></div>
+  <div style="padding:14px 18px">
+    <div style="background:var(--s1);border:1px solid var(--b1);border-radius:6px;padding:12px;margin-bottom:12px">
+      <div style="font-size:11px;font-weight:600;color:var(--wh);margin-bottom:8px">Auto-Category Rules</div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;font-size:10px;line-height:1.7;color:var(--tx)">
+        <div><span style="color:var(--bl);font-weight:600">🔧 Hardware</span> — LAN, Crimping, Accessories, SSD, Printer, Headphone, Monitor, USB, Cable, Device, Laptop, Mouse</div>
+        <div><span style="color:var(--yw);font-weight:600">💻 Software</span> — OS, Install, Zoom, Recordings, Windows, App, Driver, Teams, Update, Outlook, Email</div>
+        <div><span style="color:var(--gn);font-weight:600">🌐 Network</span> — ViewPoint, SonicWall, Network, WiFi, VPN, IMAP, DNS, WAN, Firewall, Connectivity</div>
+        <div><span style="color:#a78bfa;font-weight:600">📦 Inventory Mgmt</span> — PM, Preventive, Maintenance, ZOHO, Backup, Asset, Stock, Inventory, Report</div>
+      </div>
+      <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--b1);font-size:10px;color:var(--tx)"><span style="color:#22d3ee;font-weight:600">🛡 SOC Categories (Santhosh R — SOC Analyst L1)</span> — VAPT, SOC Checklist, ManageEngine, Projects, SOPHOS, Wazuh, GOPhish. Auto-detected from task keywords and applied when tasks are assigned to Santhosh.</div>
+    </div>
+    <div class="dz" id="dz" ondragover="dzOver(event)" ondrop="dzDrop(event)" ondragleave="dzLeave()">
+      <input type="file" multiple accept=".xlsx,.xls,.csv" onchange="handleFiles(this.files)"/>
+      <div style="font-size:28px;margin-bottom:8px">📊</div>
+      <div style="font-size:13px;font-weight:600;color:var(--wh);margin-bottom:4px">Drop Excel / CSV files here</div>
+      <div style="font-size:10px;color:var(--mt)">.xlsx · .xls · .csv · Multiple files supported · Auto-detected columns</div>
+    </div>
+    <div id="fi-list" style="margin-top:8px"></div>
+    <!-- Column mapping -->
+    <div id="col-map-wrap" style="display:none;background:var(--s1);border:1px solid var(--b1);border-radius:6px;padding:12px;margin-top:10px">
+      <div class="ph"><span class="pt">Column Mapping</span><div style="display:flex;gap:6px"><button class="btn btn-g btn-sm" id="import-btn" onclick="doImport()">⬇ Import All Rows</button><button class="btn btn-o btn-sm" onclick="$('col-map-wrap').style.display='none'">✕</button></div></div>
+      <div id="col-map"></div>
+    </div>
+    <!-- Preview -->
+    <div id="prev-wrap" style="display:none;background:var(--s1);border:1px solid var(--b1);border-radius:6px;padding:12px;margin-top:10px">
+      <div class="ph"><span class="pt">Preview</span><span class="ps" id="prev-cnt">—</span></div>
+      <div style="overflow-x:auto"><table class="tbl" id="prev-tbl"><thead></thead><tbody id="prev-body"></tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ AI ═══ -->
+<div id="pg-ai" style="display:none">
+  <div class="page-hdr"><div><div class="page-title">AI Analysis</div><div class="page-sub" id="ai-ctx">—</div></div></div>
+  <div style="padding:14px 18px">
+    <div style="background:var(--s1);border:1px solid var(--b1);border-radius:6px;padding:12px">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+        <button class="btn btn-g btn-sm" onclick="runAI('summary')">✦ Summary</button>
+        <button class="btn btn-o btn-sm" onclick="runAI('patterns')">◎ Patterns</button>
+        <button class="btn btn-o btn-sm" onclick="runAI('recs')">◉ Recommendations</button>
+        <button class="btn btn-o btn-sm" onclick="runAI('bottlenecks')">△ Bottlenecks</button>
+        <button class="btn btn-o btn-sm" onclick="runAI('cat')">🏷 Categories</button>
+        <button class="btn btn-o btn-sm" onclick="runAI('weekly')">📄 Weekly Digest</button>
+        <button class="btn btn-o btn-sm" onclick="runAI('team')">👥 Team Analysis</button>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px">
+        <input class="inp" id="ai-q" placeholder="Ask anything about your tasks and team…" style="flex:1"/>
+        <button class="btn btn-g btn-sm" onclick="runAI('custom')">Ask ↗</button>
+      </div>
+      <div id="ai-out"></div>
+    </div>
+  </div>
+</div>
+
+</div></div></div>
+<style>@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+// ── CONSTANTS ─────────────────────────────────────────
+Chart.defaults.color='#848e9c';Chart.defaults.borderColor='rgba(255,255,255,.05)';
+const GN='#0ecb81',YW='#f0b90b',BL='#1890ff',RD='#f6465d',GR='rgba(255,255,255,.04)';
+const CATS=['Hardware','Software','Network','Inventory Management'];
+const SOC_CATS=['VAPT','SOC Checklist','ManageEngine','Projects','SOPHOS','Wazuh','GOPhish'];
+const ALL_CATS=[...CATS,...SOC_CATS];
+const CCLR={Hardware:BL,Software:YW,Network:GN,'Inventory Management':'#a78bfa',VAPT:RD,'SOC Checklist':'#22d3ee',ManageEngine:'#1890ff',Projects:'#a78bfa',SOPHOS:'#fb923c',Wazuh:GN,GOPhish:'#e879f9'};
+const CICN={Hardware:'🔧',Software:'💻',Network:'🌐','Inventory Management':'📦',VAPT:'🛡',"SOC Checklist":'✅',ManageEngine:'🖥',Projects:'📁',SOPHOS:'🧱',Wazuh:'🐺',GOPhish:'🎣'};
+const SPOCS=['Ponsuthan','Ganesh','Manikandan','Gnaneswaran','John','Pradeep','Mujamil','Saravannan'];
+function getCatsForMember(name){return name==='Santhosh R'?SOC_CATS:CATS;}
+const MCOLORS=['#0ecb81','#1890ff','#f0b90b','#f6465d','#a78bfa','#fb923c','#22d3ee','#84cc16','#e879f9','#f43f5e'];
+const CAT_RULES=[
+  {cat:'Network',kw:['viewpoint','sonicwall','network','wifi','vpn','imap','dns','wan','vlan','ping','firewall','connectivity','lan line']},
+  {cat:'Hardware',kw:['lan','crimping','accessories','accessory','ssd','printer','headphone','monitor','usb','cable','device','mouse','keyboard','mic','screen','docking','peripheral','drive','laptop','hardware']},
+  {cat:'Software',kw:['os','installation','install','windows','zoom','recording','teams','update','software','app','license','driver','setup','outlook','configure','application','email client']},
+  {cat:'Inventory Management',kw:['pm','preventive','maintenance','backup','zoho','mail backup','stock','asset','inventory','spare','store','log','report','handover','triage']},
+  {cat:'VAPT',kw:['vapt','penetration','pentest','vulnerability assessment','pen test']},
+  {cat:'SOC Checklist',kw:['soc checklist','daily checklist','shift checklist','soc check']},
+  {cat:'ManageEngine',kw:['manageengine','endpoint central','desktop central','servicedesk plus']},
+  {cat:'Projects',kw:['project']},
+  {cat:'SOPHOS',kw:['sophos']},
+  {cat:'Wazuh',kw:['wazuh','siem','log analysis']},
+  {cat:'GOPhish',kw:['gophish','phishing simulation','phish campaign']}
+];
+function autoCategory(name){const nl=name.toLowerCase();for(const r of CAT_RULES)if(r.kw.some(k=>nl.includes(k)))return r.cat;return'Hardware';}
+
+// ── DATA ──────────────────────────────────────────────
+let MEMBERS=[
+  {id:1,name:'Mohamed Ibrahim J',role:'Admin / IT Lead',dept:'GCC IT Portal',av:'MI',color:MCOLORS[0],isAdmin:true},
+  {id:2,name:'Asif Muhammed A S',role:'L1 Engineer',dept:'IT Support',av:'AM',color:MCOLORS[1]},
+  {id:3,name:'Jayanth S',role:'L1 Engineer',dept:'IT Support',av:'JY',color:MCOLORS[2]},
+  {id:4,name:'Sundar N',role:'L2 Engineer',dept:'IT Support',av:'SN',color:MCOLORS[3]},
+  {id:5,name:'Kavitha V',role:'L1 Engineer',dept:'IT Support',av:'KV',color:MCOLORS[4]},
+  {id:6,name:'Beryl A',role:'L1 Engineer',dept:'IT Support',av:'BA',color:MCOLORS[5]},
+  {id:7,name:'Naveen S',role:'L1 Engineer',dept:'IT Support',av:'NS',color:MCOLORS[6]},
+  {id:8,name:'Santhosh R',role:'SOC Analyst L1',dept:'SOC Security',av:'SR',color:MCOLORS[7]}
+];
+let tasks=[];
+let importRows=[];let importHeaders=[];let colMap={};
+let charts={};let curCT='sc';let currentUID=1;let selMember=null;
+
+// ── UTILS ─────────────────────────────────────────────
+const $=id=>document.getElementById(id);
+const today=()=>new Date().toISOString().slice(0,10);
+const isAdmin=()=>(MEMBERS.find(m=>m.id===currentUID)||{}).isAdmin===true;
+const curM=()=>MEMBERS.find(m=>m.id===currentUID)||MEMBERS[0];
+const fmtD=d=>d?new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short'}):'—';
+const pColor=v=>v>=80?GN:v>=40?YW:v>0?RD:'#444';
+const sclr=v=>v>=85?GN:v>=70?YW:v>=55?BL:RD;
+function fmt(t){return(t||'').replace(/\*\*(.*?)\*\*/g,'<strong style="color:'+GN+'">$1</strong>').replace(/\n/g,'<br>');}
+function tgl(id){const e=$(id);if(e)e.style.display=e.style.display==='block'?'none':'block';}
+function getDays(t){if(t.startDate&&t.endDate){const s=new Date(t.startDate),e=new Date(t.endDate);return Math.max(1,Math.ceil((e-s)/86400000)+1);}return t.d||1;}
+const eff=t=>Math.round(100-((getDays(t)-1)/9)*38);
+const tmg=t=>{const d=getDays(t);return d<=1?98:d<=4?86:d<=8?73:65;};
+const ovr=t=>Math.round(((t.progress||0)+eff(t)+tmg(t))/3);
+function getStatus(t){const p=t.progress||0;if(p>=100)return{l:'Completed',c:'bg',color:GN};if(t.deadline&&new Date(t.deadline)<new Date()&&p<100)return{l:'Overdue',c:'br',color:RD};if(p===0)return{l:'Not Started',c:'bb',color:BL};return{l:'In Progress',c:'by',color:YW};}
+function sBdg(t){const s=getStatus(t);return`<span class="bdg ${s.c}">${s.l}</span>`;}
+function pBdg(p){return`<span class="bdg ${p==='High'?'br':p==='Low'?'bg':'by'}">${p}</span>`;}
+function cBdg(c){const sty=c==='Inventory Management'?'background:rgba(167,139,250,.15);color:#a78bfa':'';return`<span class="bdg ${c==='Hardware'?'bb':c==='Software'?'by':c==='Network'?'bg':''}" style="${sty}">${CICN[c]||'▪'} ${c}</span>`;}
+function ibar(v,c,w=55){return`<div style="display:flex;align-items:center;gap:5px"><div style="width:${w}px;height:3px;background:var(--s3);border-radius:999px"><div style="height:3px;border-radius:999px;background:${c};width:${Math.min(v,100)}%"></div></div><span style="font-size:10px;font-weight:600;color:${c}">${v}%</span></div>`;}
+
+// ── CLOCK ─────────────────────────────────────────────
+function tick(){if($('clk'))$('clk').textContent=new Date().toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'});}
+tick();setInterval(tick,30000);
+
+// ── STORAGE ───────────────────────────────────────────
+const DS={
+  _m:{},
+  async set(k,v){this._m[k]=v;try{if(window.storage)await window.storage.set(k,JSON.stringify(v));}catch(e){}try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}},
+  async get(k){if(this._m[k]!==undefined)return this._m[k];try{if(window.storage){const r=await window.storage.get(k);if(r?.value)return JSON.parse(r.value);}}catch(e){}try{const r=localStorage.getItem(k);if(r)return JSON.parse(r);}catch(e){}return null;}
+};
+async function saveData(){await DS.set('vd4_tasks',tasks);await DS.set('vd4_members',MEMBERS);await DS.set('vd4_uid',currentUID);}
+async function loadData(){
+  const t=await DS.get('vd4_tasks');if(t&&Array.isArray(t))tasks=t;
+  const m=await DS.get('vd4_members');if(m&&Array.isArray(m)&&m.length)MEMBERS=m;
+  const u=await DS.get('vd4_uid');if(u)currentUID=u;
+}
+
+// ── USER / MEMBER ─────────────────────────────────────
+function buildUserSel(){
+  if(!$('user-sel'))return;
+  $('user-sel').innerHTML=MEMBERS.map(m=>`<option value="${m.id}">${m.isAdmin?'👑 ':''} ${m.name}</option>`).join('');
+  $('user-sel').value=currentUID;
+  updateUserUI();
+}
+function switchUser(id){currentUID=id;updateUserUI();refreshAll();saveData();}
+function updateUserUI(){
+  const m=curM();if(!m)return;
+  const av=$('cur-av');
+  if(av){av.textContent=m.av;av.style.background=m.color+'22';av.style.color=m.color;av.style.border='1px solid '+m.color+'44';}
+  populateDropdowns();
+}
+function populateDropdowns(){
+  const mOpts='<option value="">All Members</option>'+MEMBERS.map(m=>`<option value="${m.name}">${m.name}</option>`).join('');
+  ['mf','tk-mf'].forEach(id=>{const el=$(id);if(!el)return;const v=el.value;el.innerHTML=mOpts;el.value=v;});
+  const toOpts=MEMBERS.map(m=>`<option value="${m.name}">${m.name}</option>`).join('');
+  if($('nt-to')){$('nt-to').innerHTML=toOpts;$('nt-to').value=curM().name;updateTaskCatOptions();}
+  if($('nt-spoc')){$('nt-spoc').innerHTML=SPOCS.map(s=>`<option>${s}</option>`).join('');}
+}
+function updateTaskCatOptions(){
+  const sel=$('nt-to');if(!sel)return;
+  const cats=getCatsForMember(sel.value);
+  const catSel=$('nt-cat');if(!catSel)return;
+  const cur=catSel.value;
+  catSel.innerHTML=cats.map(c=>`<option${c===cur?' selected':''}>${c}</option>`).join('');
+}
+function addMember(){
+  const name=$('nm-name').value.trim();if(!name)return;
+  const role=$('nm-role').value.trim()||'L1 Engineer';
+  const dept=$('nm-dept').value.trim()||'IT Support';
+  const color=$('nm-clr').value;
+  const av=name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  const id=Math.max(...MEMBERS.map(m=>m.id))+1;
+  MEMBERS.push({id,name,role,dept,av,color,isAdmin:false});
+  $('nm-name').value='';$('nm-role').value='';$('nm-dept').value='';
+  tgl('am-panel');buildUserSel();renderMembersPage();saveData();
+}
+
+// ── PAGE ROUTING ──────────────────────────────────────
+function go(pg,sbEl){
+  ['ov','tk','pf','tl','mb','rp','im','ai'].forEach(p=>{const e=$('pg-'+p);if(e)e.style.display='none';});
+  const el=$('pg-'+pg);if(el)el.style.display='';
+  document.querySelectorAll('.sb-icon').forEach(e=>e.classList.remove('on'));
+  if(sbEl)sbEl.classList.add('on');
+  if(pg==='pf')renderPerformance();
+  if(pg==='tl')renderTimeline();
+  if(pg==='tk'){renderTasks();populateDropdowns();}
+  if(pg==='mb')renderMembersPage();
+  if(pg==='rp')renderReportsPage();
+  if(pg==='ai')$('ai-ctx').textContent=`${tasks.length} tasks · ${isAdmin()?'Admin':'Member: '+curM().name}`;
+}
+function setTab(el){document.querySelectorAll('.tb-tab').forEach(e=>e.classList.remove('on'));el.classList.add('on');}
+function setCT(el,tab){document.querySelectorAll('.ctab').forEach(e=>e.classList.remove('on'));el.classList.add('on');curCT=tab;renderMainChart();}
+function goAI(type){go('ai',document.querySelector('[onclick*="ai"]'));setTimeout(()=>runAI(type),100);}
+
+// ── FILTERING ─────────────────────────────────────────
+function filt(){
+  const cf=$('cf')?.value||'',pf=$('pf')?.value||'',mf=$('mf')?.value||'';
+  let ts=isAdmin()?tasks:tasks.filter(t=>t.assignedTo===curM().name);
+  return ts.filter(t=>(!cf||t.cat===cf)&&(!pf||t.priority===pf)&&(!mf||t.assignedTo===mf));
+}
+function filtTk(){
+  const q=($('tk-q')?.value||'').toLowerCase(),cf=$('tk-cf')?.value||'',mf=$('tk-mf')?.value||'',sf=$('tk-sf')?.value||'';
+  let ts=isAdmin()?tasks:tasks.filter(t=>t.assignedTo===curM().name);
+  return ts.filter(t=>(!q||t.name.toLowerCase().includes(q)||((t.assignedTo||'').toLowerCase().includes(q)))&&(!cf||t.cat===cf)&&(!mf||t.assignedTo===mf)&&(!sf||getStatus(t).l===sf));
+}
+
+// ── KPIs (LIVE) ───────────────────────────────────────
+function updKPIs(){
+  const ft=filt(),n=Math.max(ft.length,1);
+  const avgP=Math.round(ft.reduce((a,t)=>a+(t.progress||0),0)/n);
+  const avgSc=ft.length?Math.round(ft.reduce((a,t)=>a+ovr(t),0)/n):0;
+  const comp=ft.filter(t=>getStatus(t).l==='Completed').length;
+  const ovrd=ft.filter(t=>getStatus(t).l==='Overdue').length;
+  $('k1').textContent=ft.length;
+  $('k1s').textContent=`${MEMBERS.filter(m=>ft.some(t=>t.assignedTo===m.name)).length} members active`;
+  $('k2').textContent=avgP+'%';$('k2').style.color=avgP>=80?GN:avgP>=40?YW:ft.length?RD:GN;
+  $('k2s').textContent=`Completed: ${comp} · In Progress: ${ft.filter(t=>getStatus(t).l==='In Progress').length}`;
+  $('k3').textContent=ft.length?avgSc+'%':'—';$('k3').style.color=sclr(avgSc);
+  $('k3s').textContent=ft.length?`Best: ${Math.max(...ft.map(ovr))}% · Worst: ${Math.min(...ft.map(ovr))}%`:'—';
+  $('k4').textContent=`${ovrd} / ${comp}`;$('k4').style.color=ovrd?RD:GN;
+  $('k4s').textContent='Overdue / Completed';
+}
+
+// ── INLINE PROGRESS SLIDER ────────────────────────────
+function liveP(id,val){
+  const t=tasks.find(x=>x.id===id);if(!t)return;
+  t.progress=+val;
+  // Update only this row's DOM elements — no table re-render
+  const lb=$('plbl-'+id);if(lb){lb.textContent=val+'%';lb.style.color=pColor(+val);}
+  const sb=$('stlbl-'+id);if(sb)sb.innerHTML=sBdg(t);
+  const sc=$('sclbl-'+id);if(sc){const o=ovr(t);sc.textContent=o+'%';sc.style.color=sclr(o);}
+  // Live KPI update
+  updKPIs();
+}
+function saveP(id,val){
+  const t=tasks.find(x=>x.id===id);if(!t)return;
+  t.progress=+val;
+  if(+val>=100&&!t.endDate)t.endDate=today();
+  saveData();
+  // Refresh charts without touching the task table
+  renderMainChart();renderSmallCharts();renderTopBars();renderOvTaskTable();
+  if($('pg-mb').style.display!=='none')renderMembersPage();
+}
+
+// ── TASK TABLE (All Tasks) ────────────────────────────
+function renderTasks(){
+  const ft=filtTk();
+  if($('tk-meta'))$('tk-meta').textContent=`${ft.length} task(s)${isAdmin()?'':" · "+curM().name+"'s view"}`;
+  if(!$('tk-body'))return;
+  $('tk-body').innerHTML=ft.map((t,i)=>{
+    const idx=tasks.indexOf(t),total=tasks.length;
+    const p=t.progress||0,sc=ovr(t);
+    return`<tr id="tr-${t.id}">
+      <td style="white-space:nowrap">
+        <button onclick="moveTask(${t.id},-1)" style="background:none;border:none;color:${idx>0?'var(--mt)':'var(--s3)'};cursor:pointer;font-size:12px;padding:0 2px" ${idx===0?'disabled':''}>▲</button>
+        <button onclick="moveTask(${t.id},1)" style="background:none;border:none;color:${idx<total-1?'var(--mt)':'var(--s3)'};cursor:pointer;font-size:12px;padding:0 2px" ${idx===total-1?'disabled':''}>▼</button>
+      </td>
+      <td style="color:var(--mt);font-size:10px">${i+1}</td>
+      <td style="font-weight:500;color:var(--wh);white-space:nowrap;max-width:160px;overflow:hidden;text-overflow:ellipsis" title="${t.name}">${t.name}</td>
+      <td style="font-size:10px;white-space:nowrap">${t.assignedTo||'—'}</td>
+      <td>${cBdg(t.cat)}</td>
+      <td>${pBdg(t.priority)}</td>
+      <td style="min-width:160px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <input type="range" min="0" max="100" value="${p}" class="pslider" style="width:80px" oninput="liveP(${t.id},+this.value)" onchange="saveP(${t.id},+this.value)"/>
+          <span id="plbl-${t.id}" style="font-size:10px;font-weight:700;color:${pColor(p)};min-width:30px">${p}%</span>
+        </div>
+      </td>
+      <td id="stlbl-${t.id}">${sBdg(t)}</td>
+      <td style="font-size:10px">${t.assignedBy||'—'}</td>
+      <td style="font-size:10px;color:var(--mt)">${fmtD(t.startDate)}</td>
+      <td style="font-size:10px;color:var(--mt)">${fmtD(t.endDate)}</td>
+      <td style="font-size:10px;color:${t.deadline&&new Date(t.deadline)<new Date()&&p<100?RD:'#848e9c'}">${fmtD(t.deadline)}</td>
+      <td id="sclbl-${t.id}" style="font-size:12px;font-weight:800;color:${sclr(sc)}">${sc}%</td>
+      <td><button onclick="delTask(${t.id})" style="background:none;border:none;color:var(--mt);cursor:pointer;font-size:12px;padding:0 4px" title="Delete task">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function addTask(){
+  const nm=$('nt-nm').value.trim();if(!nm)return;
+  const sd=$('nt-sd').value,ed=$('nt-ed').value,dl=$('nt-dl').value;
+  let d=parseInt($('nt-days').value)||1;
+  if(sd&&ed)d=Math.max(1,Math.ceil((new Date(ed)-new Date(sd))/86400000)+1);
+  tasks.push({id:Math.max(0,...tasks.map(t=>t.id),0)+1,name:nm,cat:$('nt-cat').value,priority:$('nt-prio').value,d,progress:parseInt($('nt-prog').value)||0,assignedTo:$('nt-to').value,assignedBy:$('nt-spoc').value,startDate:sd,endDate:ed,deadline:dl});
+  $('nt-nm').value='';$('nt-prog').value=0;if($('nt-plbl'))$('nt-plbl').textContent='0%';
+  tgl('atk-panel');refreshAll();saveData();
+}
+function delTask(id){if(confirm('Delete this task?')){tasks=tasks.filter(t=>t.id!==id);refreshAll();saveData();}}
+function moveTask(id,dir){
+  const idx=tasks.findIndex(t=>t.id===id);const ni=idx+dir;
+  if(ni<0||ni>=tasks.length)return;
+  [tasks[idx],tasks[ni]]=[tasks[ni],tasks[idx]];
+  renderTasks();saveData();
+}
+
+// ── OVERVIEW TABLES ───────────────────────────────────
+function renderOvTaskTable(){
+  const ft=[...filt()].sort((a,b)=>ovr(b)-ovr(a));
+  if($('ov-cnt'))$('ov-cnt').textContent=`${ft.length} tasks`;
+  if(!$('ov-body'))return;
+  $('ov-body').innerHTML=ft.map((t,i)=>`<tr>
+    <td style="color:var(--mt);font-size:10px">${i+1}</td>
+    <td style="font-weight:500;color:var(--wh)">${t.name}</td>
+    <td style="font-size:10px">${(t.assignedTo||'').split(' ').slice(0,1).join('')||'—'}</td>
+    <td>${cBdg(t.cat)}</td><td>${pBdg(t.priority)}</td>
+    <td>${ibar(t.progress||0,pColor(t.progress||0),55)}</td>
+    <td>${sBdg(t)}</td>
+    <td style="font-size:10px;color:${t.deadline&&new Date(t.deadline)<new Date()&&(t.progress||0)<100?RD:YW}">${fmtD(t.deadline)}</td>
+    <td style="font-size:12px;font-weight:800;color:${sclr(ovr(t))}">${ovr(t)}%</td>
+  </tr>`).join('');
+}
+function renderCatTable(){
+  const ft=filt();const vc=CATS.filter(c=>ft.some(t=>t.cat===c));
+  if($('cat-cnt'))$('cat-cnt').textContent=`${vc.length} categories`;
+  if(!$('cat-body'))return;
+  $('cat-body').innerHTML=vc.map(c=>{
+    const ts=ft.filter(t=>t.cat===c);
+    const sc=Math.round(ts.reduce((a,t)=>a+ovr(t),0)/ts.length);
+    const ap=Math.round(ts.reduce((a,t)=>a+(t.progress||0),0)/ts.length);
+    return`<tr><td><span style="display:flex;align-items:center;gap:5px"><span style="width:3px;height:14px;border-radius:2px;background:${CCLR[c]};display:inline-block"></span>${CICN[c]} ${c}</span></td><td style="color:var(--wh);font-weight:600">${ts.length}</td><td style="font-weight:700;color:${sclr(sc)}">${sc}%</td><td>${ibar(ap,CCLR[c],55)}</td><td>${ibar(sc,CCLR[c],55)}</td></tr>`;
+  }).join('');
+}
+function renderTopBars(){
+  const ft=[...filt()].sort((a,b)=>ovr(b)-ovr(a));
+  if($('top-cnt'))$('top-cnt').textContent=`${ft.length} tasks`;
+  if(!$('top-bars'))return;
+  $('top-bars').innerHTML=ft.map(t=>`<div style="display:flex;align-items:center;gap:7px;margin-bottom:6px"><div style="font-size:10px;color:var(--wh);width:105px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0" title="${t.name}">${t.name}</div><div style="flex:1;height:4px;background:var(--s3);border-radius:2px"><div style="height:4px;border-radius:2px;background:${CCLR[t.cat]};width:${ovr(t)}%"></div></div><div style="font-size:11px;font-weight:700;color:${sclr(ovr(t))};width:30px;text-align:right">${ovr(t)}%</div></div>`).join('');
+}
+function renderSmallCharts(){
+  const ft=filt();
+  const pc=[RD,YW,GN];
+  mkChart('c-prio','doughnut',{labels:['High','Medium','Low'],datasets:[{data:['High','Medium','Low'].map(p=>ft.filter(t=>t.priority===p).length),backgroundColor:pc.map(c=>c+'33'),borderColor:pc,borderWidth:1.5,hoverOffset:4}]},{cutout:'62%',plugins:{legend:{display:true,position:'right',labels:{color:'#848e9c',font:{size:9},boxWidth:8}}}});
+  const pb=['0%','1-25','26-50','51-75','76-99','100%'];
+  const pv=[ft.filter(t=>(t.progress||0)===0).length,ft.filter(t=>(t.progress||0)>0&&(t.progress||0)<=25).length,ft.filter(t=>(t.progress||0)>25&&(t.progress||0)<=50).length,ft.filter(t=>(t.progress||0)>50&&(t.progress||0)<=75).length,ft.filter(t=>(t.progress||0)>75&&(t.progress||0)<100).length,ft.filter(t=>(t.progress||0)>=100).length];
+  mkChart('c-pdist','bar',{labels:pb,datasets:[{data:pv,backgroundColor:[BL+'44',BL+'55',YW+'44',YW+'66',GN+'44',GN+'88'],borderColor:[BL,BL,YW,YW,GN,GN],borderWidth:1,borderRadius:3}]},{scales:{y:{beginAtZero:true,ticks:{color:'#848e9c',font:{size:9},stepSize:1},grid:{color:GR}},x:{grid:{display:false},ticks:{color:'#848e9c',font:{size:9}}}}});
+  const st=['Completed','In Progress','Not Started','Overdue'],sc=[GN,YW,BL,RD];
+  if($('st-rings'))$('st-rings').innerHTML=st.map((s,i)=>{const cnt=ft.filter(t=>getStatus(t).l===s).length,pct=ft.length?Math.round(cnt/ft.length*100):0,r=26,ci=2*Math.PI*r;return`<div style="text-align:center"><svg width="60" height="60" viewBox="0 0 60 60"><circle cx="30" cy="30" r="${r}" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="5"/><circle cx="30" cy="30" r="${r}" fill="none" stroke="${sc[i]}" stroke-width="5" stroke-dasharray="${(ci*pct/100).toFixed(1)} ${ci.toFixed(1)}" stroke-linecap="round" transform="rotate(-90 30 30)"/><text x="30" y="34" text-anchor="middle" font-size="11" font-weight="700" fill="${sc[i]}" font-family="Inter">${cnt}</text></svg><div style="font-size:9px;color:var(--mt);margin-top:1px">${s}</div></div>`;}).join('');
+}
+
+// ── MAIN CHART ────────────────────────────────────────
+function renderMainChart(){
+  const ft=filt();if(!ft.length){if(charts['c-main']){charts['c-main'].destroy();delete charts['c-main'];}return;}
+  const sn=t=>t.name.length>11?t.name.slice(0,11)+'…':t.name;
+  let ds,opts={};
+  if(curCT==='sc'){
+    const s=[...ft].sort((a,b)=>ovr(b)-ovr(a));
+    ds={labels:s.map(sn),datasets:[{type:'bar',data:s.map(ovr),backgroundColor:s.map(t=>CCLR[t.cat]+'33'),borderColor:s.map(t=>CCLR[t.cat]),borderWidth:1.5,borderRadius:2},{type:'line',data:s.map(ovr),borderColor:GN,backgroundColor:'rgba(14,203,129,.06)',fill:true,tension:.35,pointRadius:4,pointBackgroundColor:s.map(t=>sclr(ovr(t))),borderWidth:2,yAxisID:'y'}]};
+    opts={scales:{y:{min:0,max:105,ticks:{color:'#848e9c',font:{size:9}},grid:{color:GR}},x:{grid:{display:false},ticks:{color:'#848e9c',font:{size:9}}}}};
+  }else if(curCT==='pr'){
+    ds={labels:ft.map(sn),datasets:[{type:'bar',data:ft.map(t=>t.progress||0),backgroundColor:ft.map(t=>pColor(t.progress||0)+'44'),borderColor:ft.map(t=>pColor(t.progress||0)),borderWidth:1.5,borderRadius:3}]};
+    opts={scales:{y:{beginAtZero:true,max:105,ticks:{color:'#848e9c',font:{size:9}},grid:{color:GR}},x:{grid:{display:false},ticks:{color:'#848e9c',font:{size:9}}}}};
+  }else if(curCT==='dy'){
+    ds={labels:ft.map(sn),datasets:[{type:'bar',data:ft.map(getDays),backgroundColor:ft.map(t=>CCLR[t.cat]+'44'),borderColor:ft.map(t=>CCLR[t.cat]),borderWidth:1.5,borderRadius:2}]};
+    opts={scales:{y:{beginAtZero:true,ticks:{color:'#848e9c',font:{size:9}},grid:{color:GR}},x:{grid:{display:false},ticks:{color:'#848e9c',font:{size:9}}}}};
+  }else if(curCT==='mb'){
+    const vm=MEMBERS.filter(m=>ft.some(t=>t.assignedTo===m.name));
+    ds={labels:vm.map(m=>m.av+' '+m.name.split(' ')[0]),datasets:[
+      {label:'Tasks',data:vm.map(m=>ft.filter(t=>t.assignedTo===m.name).length),backgroundColor:vm.map(m=>m.color+'33'),borderColor:vm.map(m=>m.color),borderWidth:1.5,borderRadius:3,type:'bar'},
+      {label:'Avg Progress',data:vm.map(m=>{const ts=ft.filter(t=>t.assignedTo===m.name);return Math.round(ts.reduce((a,t)=>a+(t.progress||0),0)/Math.max(ts.length,1));}),type:'line',borderColor:YW,fill:false,tension:.3,pointRadius:5,borderWidth:2,yAxisID:'y1'}
+    ]};
+    opts={scales:{y:{beginAtZero:true,ticks:{color:'#848e9c',font:{size:9}},grid:{color:GR}},y1:{position:'right',min:0,max:105,ticks:{color:'#848e9c',font:{size:9}},grid:{display:false}},x:{grid:{display:false},ticks:{color:'#848e9c',font:{size:9}}}}};
+  }else if(curCT==='rd'){
+    const vc=CATS.filter(c=>ft.some(t=>t.cat===c));
+    ds={labels:vc,datasets:[{data:vc.map(c=>{const ts=ft.filter(t=>t.cat===c);return Math.round(ts.reduce((a,t)=>a+ovr(t),0)/Math.max(ts.length,1));}),borderColor:GN,backgroundColor:'rgba(14,203,129,.08)',borderWidth:2,pointRadius:5,pointBackgroundColor:GN},{data:vc.map(c=>{const ts=ft.filter(t=>t.cat===c);return Math.round(ts.reduce((a,t)=>a+(t.progress||0),0)/Math.max(ts.length,1));}),borderColor:YW,backgroundColor:'rgba(240,185,11,.06)',borderWidth:2,pointRadius:5,pointBackgroundColor:YW}]};
+    opts={scales:{r:{min:0,max:105,ticks:{font:{size:8},backdropColor:'transparent',stepSize:20},grid:{color:'rgba(255,255,255,.05)'},angleLines:{color:'rgba(255,255,255,.05)'},pointLabels:{font:{size:10,weight:'600'},color:'#b7bdc6'}}}};
+  }
+  if(charts['c-main']){charts['c-main'].destroy();delete charts['c-main'];}
+  if(!$('c-main'))return;
+  charts['c-main']=new Chart($('c-main'),{type:curCT==='rd'?'radar':'bar',data:ds,options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},...opts}});
+  if($('main-leg'))$('main-leg').innerHTML=ft.map(t=>`<span><span style="width:7px;height:7px;border-radius:2px;background:${CCLR[t.cat]};display:inline-block;margin-right:3px"></span>${t.name.split(' ')[0]}</span>`).join('');
+}
+
+// ── CHART HELPER ─────────────────────────────────────
+function mkChart(id,type,data,opts={}){
+  if(charts[id]){charts[id].destroy();delete charts[id];}
+  const el=$(id);if(!el)return;
+  charts[id]=new Chart(el,{type,data,options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},...opts}});
+}
+
+// ── PERFORMANCE PAGE ──────────────────────────────────
+function renderPerformance(){
+  const ft=filt();if(!ft.length)return;
+  const sn=t=>t.name.length>9?t.name.slice(0,9)+'…':t.name;
+  mkChart('c-radar','radar',{labels:ft.map(sn),datasets:[
+    {label:'Perf',data:ft.map(t=>t.progress||0),borderColor:GN,backgroundColor:'rgba(14,203,129,.07)',borderWidth:2,pointRadius:3,pointBackgroundColor:GN},
+    {label:'Eff',data:ft.map(eff),borderColor:YW,backgroundColor:'rgba(240,185,11,.05)',borderWidth:2,pointRadius:3,pointBackgroundColor:YW},
+    {label:'Time',data:ft.map(tmg),borderColor:BL,backgroundColor:'rgba(24,144,255,.05)',borderWidth:2,pointRadius:3,pointBackgroundColor:BL}
+  ]},{scales:{r:{min:0,max:105,ticks:{font:{size:8},backdropColor:'transparent',stepSize:20},grid:{color:'rgba(255,255,255,.04)'},angleLines:{color:'rgba(255,255,255,.04)'},pointLabels:{font:{size:9},color:'#b7bdc6'}}},plugins:{legend:{display:true,labels:{color:'#848e9c',font:{size:9},boxWidth:8}}}});
+  mkChart('c-scat','scatter',{datasets:[{data:ft.map(t=>({x:getDays(t),y:t.progress||0})),backgroundColor:ft.map(t=>CCLR[t.cat]+'99'),borderColor:ft.map(t=>CCLR[t.cat]),borderWidth:1.5,pointRadius:7}]},{scales:{x:{title:{display:true,text:'Active Days',color:'#848e9c',font:{size:10}},ticks:{color:'#848e9c',font:{size:9}},grid:{color:GR}},y:{title:{display:true,text:'Progress %',color:'#848e9c',font:{size:10}},min:0,max:105,ticks:{color:'#848e9c',font:{size:9}},grid:{color:GR}}},plugins:{tooltip:{callbacks:{label:ctx=>{const t=ft[ctx.dataIndex];return`${t.name}: ${t.progress||0}% · ${getDays(t)}d`}}}}});
+  const vc=CATS.filter(c=>ft.some(t=>t.cat===c));
+  mkChart('c-ccat','bar',{labels:vc,datasets:[
+    {label:'Score',data:vc.map(c=>{const ts=ft.filter(t=>t.cat===c);return Math.round(ts.reduce((a,t)=>a+ovr(t),0)/ts.length);}),backgroundColor:vc.map(c=>CCLR[c]+'33'),borderColor:vc.map(c=>CCLR[c]),borderWidth:1.5,borderRadius:3},
+    {label:'Efficiency',data:vc.map(c=>{const ts=ft.filter(t=>t.cat===c);return Math.round(ts.reduce((a,t)=>a+eff(t),0)/ts.length);}),backgroundColor:'rgba(240,185,11,.15)',borderColor:YW,borderWidth:1.5,borderRadius:3},
+    {label:'Progress',data:vc.map(c=>{const ts=ft.filter(t=>t.cat===c);return Math.round(ts.reduce((a,t)=>a+(t.progress||0),0)/ts.length);}),backgroundColor:'rgba(24,144,255,.15)',borderColor:BL,borderWidth:1.5,borderRadius:3}
+  ]},{scales:{y:{min:0,max:105,ticks:{color:'#848e9c',font:{size:9}},grid:{color:GR}},x:{grid:{display:false},ticks:{color:'#848e9c',font:{size:10}}}},plugins:{legend:{display:true,labels:{color:'#848e9c',font:{size:9},boxWidth:8}}}});
+  const sorted=[...ft].sort((a,b)=>ovr(a)-ovr(b));
+  mkChart('c-strend','line',{labels:sorted.map(sn),datasets:[{data:sorted.map(ovr),borderColor:GN,backgroundColor:'rgba(14,203,129,.1)',fill:true,tension:.35,pointRadius:4,pointBackgroundColor:sorted.map(t=>sclr(ovr(t))),borderWidth:2}]},{scales:{y:{min:0,max:105,ticks:{color:'#848e9c',font:{size:9}},grid:{color:GR}},x:{grid:{display:false},ticks:{color:'#848e9c',font:{size:9},maxRotation:45}}}});
+}
+
+// ── TIMELINE PAGE ─────────────────────────────────────
+function renderTimeline(){
+  const ft=[...filt()].sort((a,b)=>getDays(b)-getDays(a));const mx=Math.max(1,...ft.map(getDays));
+  if($('tl-bars'))$('tl-bars').innerHTML=ft.map(t=>`<div style="display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:1px solid var(--b1)"><div style="font-size:11px;color:var(--wh);width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0">${t.name}</div><div style="flex:1;height:5px;background:var(--s3);border-radius:2px;overflow:hidden"><div style="height:100%;border-radius:2px;background:${CCLR[t.cat]};width:${Math.round(getDays(t)/mx*100)}%"></div></div><div style="font-size:10px;font-weight:600;color:var(--wh);width:22px;text-align:right;flex-shrink:0">${getDays(t)}d</div></div>`).join('');
+  mkChart('c-tlmain','bar',{labels:ft.map(t=>t.name.length>9?t.name.slice(0,9)+'…':t.name),datasets:[
+    {label:'Days',data:ft.map(getDays),backgroundColor:ft.map(t=>CCLR[t.cat]+'44'),borderColor:ft.map(t=>CCLR[t.cat]),borderWidth:1,borderRadius:3,yAxisID:'y'},
+    {label:'Progress',data:ft.map(t=>t.progress||0),type:'line',borderColor:GN,fill:false,tension:.3,pointRadius:4,pointBackgroundColor:GN,borderWidth:2,yAxisID:'y1'}
+  ]},{scales:{y:{beginAtZero:true,ticks:{color:'#848e9c',font:{size:9}},grid:{color:GR}},y1:{position:'right',min:0,max:105,ticks:{color:'#848e9c',font:{size:9}},grid:{display:false}},x:{grid:{display:false},ticks:{color:'#848e9c',font:{size:9},maxRotation:45}}},plugins:{legend:{display:true,labels:{color:'#848e9c',font:{size:9},boxWidth:8}}}});
+  const vc=CATS.filter(c=>ft.some(t=>t.cat===c));
+  mkChart('c-daycat','bar',{labels:vc.map(c=>CICN[c]+' '+c.split(' ')[0]),datasets:[{data:vc.map(c=>{const ts=ft.filter(t=>t.cat===c);return+(ts.reduce((a,t)=>a+getDays(t),0)/ts.length).toFixed(1);}),backgroundColor:vc.map(c=>CCLR[c]+'44'),borderColor:vc.map(c=>CCLR[c]),borderWidth:1.5,borderRadius:4}]},{scales:{y:{beginAtZero:true,ticks:{color:'#848e9c',font:{size:9}},grid:{color:GR}},x:{grid:{display:false},ticks:{color:'#848e9c',font:{size:9}}}}});
+  const bk=[{l:'1d',f:t=>getDays(t)===1},{l:'2-4d',f:t=>getDays(t)>=2&&getDays(t)<=4},{l:'5-8d',f:t=>getDays(t)>=5&&getDays(t)<=8},{l:'9+d',f:t=>getDays(t)>=9}];
+  mkChart('c-bucket','bar',{labels:bk.map(b=>b.l),datasets:[{data:bk.map(b=>ft.filter(b.f).length),backgroundColor:[GN+'44',YW+'44',BL+'44',RD+'44'],borderColor:[GN,YW,BL,RD],borderWidth:1.5,borderRadius:4}]},{scales:{y:{beginAtZero:true,ticks:{color:'#848e9c',font:{size:9},stepSize:1},grid:{color:GR}},x:{grid:{display:false},ticks:{color:'#848e9c',font:{size:9}}}}});
+  const sorted=[...ft].sort((a,b)=>getDays(a)-getDays(b));
+  if($('fast-slow'))$('fast-slow').innerHTML=`<div style="margin-bottom:10px"><div style="font-size:9px;color:var(--mt);margin-bottom:5px">⚡ FASTEST</div>${sorted.slice(0,3).map(t=>`<div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:10px;color:var(--wh)">${t.name.slice(0,18)}</span><span style="color:${GN};font-weight:700;font-size:10px">${getDays(t)}d</span></div>`).join('')}</div><div style="border-top:1px solid var(--b1);padding-top:8px"><div style="font-size:9px;color:var(--mt);margin-bottom:5px">🐢 SLOWEST</div>${sorted.slice(-3).reverse().map(t=>`<div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:10px;color:var(--wh)">${t.name.slice(0,18)}</span><span style="color:${RD};font-weight:700;font-size:10px">${getDays(t)}d</span></div>`).join('')}</div>`;
+}
+
+// ── MEMBERS PAGE ──────────────────────────────────────
+function renderMembersPage(){
+  const n=tasks.length;const avgP=n?Math.round(tasks.reduce((a,t)=>a+(t.progress||0),0)/n):0;
+  const comp=tasks.filter(t=>getStatus(t).l==='Completed').length;
+  if($('ms2'))$('ms2').textContent=n;if($('ms2s'))$('ms2s').textContent='Across all members';
+  if($('ms3'))$('ms3').textContent=avgP+'%';if($('ms4'))$('ms4').textContent=n?Math.round(comp/n*100)+'%':'0%';
+  if(!$('member-grid'))return;
+  $('member-grid').innerHTML=MEMBERS.map(m=>{
+    const mt=tasks.filter(t=>t.assignedTo===m.name),mn=Math.max(mt.length,1);
+    const ap=Math.round(mt.reduce((a,t)=>a+(t.progress||0),0)/mn);
+    const sc=mt.length?Math.round(mt.reduce((a,t)=>a+ovr(t),0)/mn):0;
+    const comp2=mt.filter(t=>getStatus(t).l==='Completed').length;
+    const ovrd=mt.filter(t=>getStatus(t).l==='Overdue').length;
+    return`<div class="mcard ${selMember===m.id?'sel':''}" onclick="showMemberDetail(${m.id})">
+      <div class="mcard-accent" style="background:${m.color}"></div>
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px">
+        <div class="av" style="width:36px;height:36px;background:${m.color}22;color:${m.color};font-size:12px">${m.av}</div>
+        <div style="min-width:0"><div style="font-size:11px;font-weight:700;color:var(--wh);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.name}</div><div style="font-size:9px;color:var(--mt);margin-top:1px">${m.role}</div>${m.isAdmin?'<span class="bdg bg" style="font-size:8px;margin-top:2px;display:inline-flex">👑 Admin</span>':''}</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:9px">
+        <div style="background:var(--s2);border-radius:4px;padding:6px"><div style="font-size:9px;color:var(--mt)">Tasks</div><div style="font-size:15px;font-weight:700;color:var(--wh)">${mt.length}</div></div>
+        <div style="background:var(--s2);border-radius:4px;padding:6px"><div style="font-size:9px;color:var(--mt)">Score</div><div style="font-size:15px;font-weight:700;color:${sclr(sc)}">${mt.length?sc:'-'}%</div></div>
+      </div>
+      <div style="margin-bottom:7px"><div style="display:flex;justify-content:space-between;font-size:9px;color:var(--mt);margin-bottom:3px"><span>Avg Progress</span><span style="color:${pColor(ap)}">${ap}%</span></div><div style="height:3px;background:var(--s3);border-radius:999px"><div style="height:3px;border-radius:999px;background:${pColor(ap)};width:${ap}%"></div></div></div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap"><span class="bdg bg" style="font-size:8px">✔ ${comp2}</span><span class="bdg by" style="font-size:8px">⏳ ${mt.filter(t=>getStatus(t).l==='In Progress').length}</span>${ovrd?`<span class="bdg br" style="font-size:8px">⚠ ${ovrd}</span>`:''}</div>
+    </div>`;
+  }).join('');
+}
+function showMemberDetail(mid){
+  selMember=mid;
+  const m=MEMBERS.find(x=>x.id===mid);const mt=tasks.filter(t=>t.assignedTo===m.name);
+  if($('mbd-title'))$('mbd-title').textContent=`${m.name} — ${mt.length} tasks`;
+  if($('mbd-body'))$('mbd-body').innerHTML=mt.map((t,i)=>`<tr><td style="color:var(--mt)">${i+1}</td><td style="font-weight:500;color:var(--wh)">${t.name}</td><td>${cBdg(t.cat)}</td><td>${pBdg(t.priority)}</td><td>${ibar(t.progress||0,pColor(t.progress||0),55)}</td><td>${sBdg(t)}</td><td style="font-size:10px">${t.assignedBy||'—'}</td><td style="font-size:10px;color:${t.deadline&&new Date(t.deadline)<new Date()&&(t.progress||0)<100?RD:YW}">${fmtD(t.deadline)}</td><td style="font-size:12px;font-weight:800;color:${sclr(ovr(t))}">${ovr(t)}%</td></tr>`).join('');
+  if($('mb-detail'))$('mb-detail').style.display='block';
+  renderMembersPage();
+}
+
+// ── REPORTS ───────────────────────────────────────────
+function renderReportsPage(){
+  try{const l=localStorage.getItem('vd4_last_rpt');if($('rp-last'))$('rp-last').textContent=l?'Last: '+new Date(l).toLocaleDateString('en-IN',{dateStyle:'medium'}):'Never generated';}catch(e){}
+  const nm=new Date();nm.setDate(nm.getDate()+(8-nm.getDay())%7||7);
+  if($('rp-next'))$('rp-next').textContent='Next: '+nm.toLocaleDateString('en-IN',{dateStyle:'medium'});
+  if(!$('rp-cards'))return;
+  $('rp-cards').innerHTML=MEMBERS.map(m=>{
+    const mt=tasks.filter(t=>t.assignedTo===m.name);
+    const ap=mt.length?Math.round(mt.reduce((a,t)=>a+(t.progress||0),0)/mt.length):0;
+    const comp=mt.filter(t=>getStatus(t).l==='Completed').length;
+    const ovrd=mt.filter(t=>getStatus(t).l==='Overdue').length;
+    let lr='';try{lr=localStorage.getItem('vd4_rpt_'+m.id)||'';}catch(e){}
+    return`<div style="background:var(--s1);border:1px solid var(--b1);border-radius:8px;padding:12px;position:relative;overflow:hidden">
+      <div class="mcard-accent" style="background:${m.color}"></div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px">
+        <div class="av" style="width:30px;height:30px;background:${m.color}22;color:${m.color}">${m.av}</div>
+        <div><div style="font-size:11px;font-weight:600;color:var(--wh)">${m.name}</div><div style="font-size:9px;color:var(--mt)">${mt.length} tasks · ${ap}% avg</div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px;gap:4px;flex-wrap:wrap">
+        <span class="bdg bg" style="font-size:8px">✔ ${comp}</span>
+        <span class="bdg by" style="font-size:8px">⏳ ${mt.filter(t=>getStatus(t).l==='In Progress').length}</span>
+        ${ovrd?`<span class="bdg br" style="font-size:8px">⚠ ${ovrd}</span>`:''}
+      </div>
+      ${lr?`<div style="font-size:9px;color:var(--mt);margin-bottom:7px">Last: ${new Date(lr).toLocaleDateString('en-IN',{dateStyle:'medium'})}</div>`:''}
+      <div style="display:flex;gap:5px">
+        <button class="btn btn-g btn-sm" style="flex:1;justify-content:center" onclick="genReport(${m.id})">⬇ Download</button>
+        <button class="btn btn-o btn-sm" onclick="previewReport(${m.id})">👁</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function genReport(mid,dl=true){
+  const m=MEMBERS.find(x=>x.id===mid);if(!m)return'';
+  const days=parseInt($('rp-range')?.value||'7');
+  const mt=tasks.filter(t=>t.assignedTo===m.name);
+  const n=Math.max(mt.length,1);
+  const ap=Math.round(mt.reduce((a,t)=>a+(t.progress||0),0)/n);
+  const comp=mt.filter(t=>getStatus(t).l==='Completed').length;
+  const ovrd=mt.filter(t=>getStatus(t).l==='Overdue').length;
+  const inprog=mt.filter(t=>getStatus(t).l==='In Progress').length;
+  const sc=mt.length?Math.round(mt.reduce((a,t)=>a+ovr(t),0)/n):0;
+  const now=new Date().toLocaleString('en-IN',{dateStyle:'full',timeStyle:'short'});
+  const spocMap={};SPOCS.forEach(s=>{spocMap[s]=(mt.filter(t=>t.assignedBy===s).length);});
+  const activeSPOCs=SPOCS.filter(s=>spocMap[s]>0);
+
+  const html=`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<title>Weekly Report — ${m.name}</title>
+<style>
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#0b0e11;color:#b7bdc6;margin:0;padding:28px;font-size:12px}
+.wrap{max-width:900px;margin:0 auto}
+.hdr{display:flex;align-items:center;gap:16px;background:#161a1e;border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:16px;margin-bottom:22px;position:relative;overflow:hidden}
+.hdr::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:${m.color}}
+.av{width:48px;height:48px;border-radius:50%;background:${m.color}22;color:${m.color};display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800}
+h1{font-size:20px;font-weight:800;color:#eaecef;letter-spacing:-.4px;margin-bottom:2px}
+h2{font-size:13px;font-weight:700;color:#0ecb81;margin:20px 0 9px;border-bottom:1px solid rgba(14,203,129,.2);padding-bottom:5px}
+.krow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.kc{background:#161a1e;border:1px solid rgba(255,255,255,.07);border-radius:7px;padding:12px;text-align:center}
+.kv{font-size:22px;font-weight:700;color:#eaecef;margin-bottom:2px}
+.kl{font-size:10px;color:#848e9c}
+table{width:100%;border-collapse:collapse;font-size:11px;margin:8px 0}
+th{padding:6px 9px;text-align:left;color:#848e9c;font-size:9px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid rgba(255,255,255,.07)}
+td{padding:6px 9px;border-bottom:1px solid rgba(255,255,255,.03)}
+.bg{background:rgba(14,203,129,.12);color:#0ecb81;display:inline-block;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:600}
+.by{background:rgba(240,185,11,.1);color:#f0b90b;display:inline-block;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:600}
+.br{background:rgba(246,70,93,.12);color:#f6465d;display:inline-block;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:600}
+.bb{background:rgba(24,144,255,.12);color:#1890ff;display:inline-block;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:600}
+.pb{display:inline-block;width:70px;height:4px;background:#2b3139;border-radius:999px;vertical-align:middle;margin-right:5px}
+.pf{display:inline-block;height:4px;border-radius:999px}
+.footer{margin-top:28px;font-size:9px;color:#4a5568;text-align:center;border-top:1px solid rgba(255,255,255,.06);padding-top:10px}
+.alert-box{background:rgba(246,70,93,.08);border:1px solid rgba(246,70,93,.2);border-radius:6px;padding:10px;margin-bottom:12px}
+.ok-box{background:rgba(14,203,129,.06);border:1px solid rgba(14,203,129,.2);border-radius:6px;padding:10px;margin-bottom:12px}
+</style></head><body><div class="wrap">
+<div class="hdr">
+  <div class="av">${m.av}</div>
+  <div>
+    <h1>${m.name}</h1>
+    <div style="font-size:10px;color:#848e9c">${m.role} · ${m.dept} · VDartinc GCC IT Portal</div>
+    <div style="font-size:10px;color:#848e9c;margin-top:3px">📅 Report Period: Last ${days} days · Generated: ${now}</div>
+  </div>
+  <div style="margin-left:auto;text-align:right">
+    <div style="font-size:24px;font-weight:800;color:${m.color}">${ap}%</div>
+    <div style="font-size:10px;color:#848e9c">Avg Progress</div>
+  </div>
+</div>
+
+<h2>📊 Executive Summary</h2>
+<div class="krow">
+  <div class="kc"><div class="kv">${mt.length}</div><div class="kl">Total Tasks</div></div>
+  <div class="kc"><div class="kv" style="color:#0ecb81">${ap}%</div><div class="kl">Avg Progress</div></div>
+  <div class="kc"><div class="kv" style="color:#f0b90b">${sc}%</div><div class="kl">Overall Score</div></div>
+  <div class="kc"><div class="kv" style="color:${ovrd?'#f6465d':'#0ecb81'}">${ovrd}</div><div class="kl">Overdue</div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:18px">
+  <div class="kc"><div class="kv" style="color:#0ecb81">${comp}</div><div class="kl">Completed</div></div>
+  <div class="kc"><div class="kv" style="color:#f0b90b">${inprog}</div><div class="kl">In Progress</div></div>
+  <div class="kc"><div class="kv" style="color:#1890ff">${mt.filter(t=>getStatus(t).l==='Not Started').length}</div><div class="kl">Not Started</div></div>
+  <div class="kc"><div class="kv" style="color:#848e9c">${Math.round(mt.reduce((a,t)=>a+eff(t),0)/n)}%</div><div class="kl">Avg Efficiency</div></div>
+</div>
+
+${ovrd?`<div class="alert-box"><span style="color:#f6465d;font-weight:700;font-size:11px">⚠ ${ovrd} Overdue Task${ovrd>1?'s':''}</span><div style="font-size:10px;margin-top:4px;color:#b7bdc6">${mt.filter(t=>getStatus(t).l==='Overdue').map(t=>`<b>${t.name}</b> (deadline: ${fmtD(t.deadline)})`).join(' · ')}</div></div>`:''}
+${comp===mt.length&&mt.length>0?`<div class="ok-box"><span style="color:#0ecb81;font-weight:700;font-size:11px">✔ All tasks completed this period</span></div>`:''}
+
+<h2>✅ Task Details</h2>
+<table><thead><tr><th>#</th><th>Task Name</th><th>Category</th><th>Priority</th><th>Progress</th><th>Status</th><th>IT SPOC</th><th>Start</th><th>End</th><th>Deadline</th><th>Score</th></tr></thead>
+<tbody>${mt.map((t,i)=>{const st=getStatus(t);const pc=t.progress>=80?'#0ecb81':t.progress>=40?'#f0b90b':'#f6465d';
+return`<tr><td style="color:#848e9c">${i+1}</td>
+<td style="font-weight:500;color:#eaecef">${t.name}</td>
+<td>${CICN[t.cat]} ${t.cat}</td>
+<td><span class="${t.priority==='High'?'br':t.priority==='Low'?'bg':'by'}">${t.priority}</span></td>
+<td><span class="pb"><span class="pf" style="width:${t.progress||0}%;background:${pc};display:inline-block"></span></span><span style="font-size:10px;color:${pc};font-weight:600">${t.progress||0}%</span></td>
+<td><span class="${st.c}">${st.l}</span></td>
+<td style="font-size:10px">${t.assignedBy||'—'}</td>
+<td style="font-size:10px">${fmtD(t.startDate)}</td>
+<td style="font-size:10px">${fmtD(t.endDate)}</td>
+<td style="font-size:10px;color:${t.deadline&&new Date(t.deadline)<new Date()&&(t.progress||0)<100?'#f6465d':'#f0b90b'}">${fmtD(t.deadline)}</td>
+<td style="font-weight:800;color:${sclr(ovr(t))}">${ovr(t)}%</td></tr>`}).join('')}
+</tbody></table>
+
+<h2>📂 Category Breakdown</h2>
+<table><thead><tr><th>Category</th><th>Tasks</th><th>Avg Progress</th><th>Completed</th><th>Overdue</th><th>Avg Score</th></tr></thead>
+<tbody>${CATS.filter(c=>mt.some(t=>t.cat===c)).map(c=>{const cts=mt.filter(t=>t.cat===c);const cap=Math.round(cts.reduce((a,t)=>a+(t.progress||0),0)/cts.length);const csc=Math.round(cts.reduce((a,t)=>a+ovr(t),0)/cts.length);return`<tr><td>${CICN[c]} ${c}</td><td style="color:#eaecef;font-weight:600">${cts.length}</td><td><span style="color:${pColor(cap)};font-weight:600">${cap}%</span></td><td style="color:#0ecb81">${cts.filter(t=>getStatus(t).l==='Completed').length}</td><td style="color:#f6465d">${cts.filter(t=>getStatus(t).l==='Overdue').length}</td><td style="font-weight:700;color:${sclr(csc)}">${csc}%</td></tr>`;}).join('')}</tbody></table>
+
+${activeSPOCs.length?`<h2>👤 IT SPOC Assignment</h2>
+<table><thead><tr><th>SPOC Name</th><th>Tasks Assigned</th><th>Completed</th><th>Pending</th></tr></thead>
+<tbody>${activeSPOCs.map(s=>{const st=mt.filter(t=>t.assignedBy===s);return`<tr><td style="font-weight:500;color:#eaecef">${s}</td><td>${st.length}</td><td style="color:#0ecb81">${st.filter(t=>getStatus(t).l==='Completed').length}</td><td style="color:#f0b90b">${st.filter(t=>getStatus(t).l!=='Completed').length}</td></tr>`;}).join('')}</tbody></table>`:''}
+
+<h2>📈 Performance Analysis</h2>
+<table><thead><tr><th>Metric</th><th>Value</th><th>Benchmark</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>Avg Progress</td><td style="font-weight:700;color:${pColor(ap)}">${ap}%</td><td>&gt;75%</td><td><span class="${ap>=75?'bg':'br'}">${ap>=75?'On Track':'Needs Attention'}</span></td></tr>
+<tr><td>Task Completion Rate</td><td style="font-weight:700;color:${pColor(Math.round(comp/n*100))}">${Math.round(comp/n*100)}%</td><td>&gt;80%</td><td><span class="${comp/n>=0.8?'bg':'by'}">${comp/n>=0.8?'Good':'Monitor'}</span></td></tr>
+<tr><td>Overdue Tasks</td><td style="font-weight:700;color:${ovrd?'#f6465d':'#0ecb81'}">${ovrd}</td><td>0</td><td><span class="${ovrd?'br':'bg'}">${ovrd?'Action Required':'Excellent'}</span></td></tr>
+<tr><td>Avg Overall Score</td><td style="font-weight:700;color:${sclr(sc)}">${sc}%</td><td>&gt;80%</td><td><span class="${sc>=80?'bg':sc>=65?'by':'br'}">${sc>=80?'Good':sc>=65?'Average':'Low'}</span></td></tr>
+</tbody></table>
+
+<div class="footer">VDartinc GCC IT Portal · Weekly Report · Prepared by Mohamed Ibrahim J (Admin) · ${now}</div>
+</div></body></html>`;
+
+  if(dl){
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([html],{type:'text/html'}));
+    a.download=`VDart_Report_${m.name.replace(/\s+/g,'_')}_${today()}.html`;a.click();
+    try{localStorage.setItem('vd4_rpt_'+m.id,new Date().toISOString());localStorage.setItem('vd4_last_rpt',new Date().toISOString());}catch(e){}
+    renderReportsPage();
+  }
+  return html;
+}
+function previewReport(mid){
+  const html=genReport(mid,false);const m=MEMBERS.find(x=>x.id===mid);
+  if($('rp-prev-lbl'))$('rp-prev-lbl').textContent=`${m.name}'s report`;
+  if($('rp-preview'))$('rp-preview').innerHTML=`<iframe srcdoc="${html.replace(/"/g,'&quot;').replace(/'/g,"&#39;")}" style="width:100%;height:400px;border:1px solid var(--b1);border-radius:6px;background:#0b0e11"></iframe>`;
+}
+function genAllReports(){MEMBERS.forEach((m,i)=>setTimeout(()=>genReport(m.id),i*500));}
+
+// ── EXCEL IMPORT ──────────────────────────────────────
+let pendingRows=[];let pendingHeaders=[];
+function dzOver(e){e.preventDefault();$('dz').classList.add('drag');}
+function dzLeave(){$('dz').classList.remove('drag');}
+function dzDrop(e){e.preventDefault();$('dz').classList.remove('drag');handleFiles(e.dataTransfer.files);}
+async function handleFiles(files){
+  for(const file of files){
+    const ext=file.name.split('.').pop().toLowerCase();
+    const fid=Date.now()+Math.random();
+    const flist=$('fi-list');
+    const frow=document.createElement('div');frow.className='fi-row';frow.id='fi-'+fid;
+    frow.innerHTML=`<div style="width:26px;height:26px;border-radius:4px;background:rgba(14,203,129,.15);color:var(--gn);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">📊</div><div style="flex:1;min-width:0"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:11px;color:var(--wh);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${file.name}</span><span class="bdg by" id="fst-${fid}">Parsing…</span></div><div style="font-size:9px;color:var(--mt)">${(file.size/1024).toFixed(1)} KB · ${ext.toUpperCase()}</div><div class="fi-prog"><div class="fi-bar" id="fpb-${fid}" style="width:50%"></div></div></div>`;
+    flist.appendChild(frow);
+    try{
+      if(ext==='csv')await parseCsv(file,fid);
+      else if(ext==='xlsx'||ext==='xls')await parseXls(file,fid);
+      else{$('fst-'+fid).textContent='Unsupported';$('fst-'+fid).className='bdg br';}
+    }catch(e){$('fst-'+fid).textContent='Error';$('fst-'+fid).className='bdg br';console.error(e);}
+  }
+}
+async function parseCsv(file,fid){
+  const text=await file.text();const lines=text.trim().split('\n').filter(Boolean);
+  if(!lines.length){$('fst-'+fid).textContent='Empty';$('fst-'+fid).className='bdg br';return;}
+  const headers=lines[0].split(',').map(h=>h.replace(/"/g,'').trim());
+  const rows=lines.slice(1).map(line=>{const vals=line.match(/(".*?"|[^,]+|(?<=,)(?=,)|(?<=,)$|^(?=,))/g)||[];const obj={};headers.forEach((h,i)=>obj[h]=(vals[i]||'').replace(/"/g,'').trim());return obj;}).filter(r=>Object.values(r).some(v=>v));
+  finishParse(headers,rows,fid,file.name);
+}
+async function parseXls(file,fid){
+  const ab=await file.arrayBuffer();const wb=XLSX.read(ab,{type:'array',cellDates:true,cellText:false});
+  const ws=wb.Sheets[wb.SheetNames[0]];const rows=XLSX.utils.sheet_to_json(ws,{defval:'',raw:false});
+  if(!rows.length){$('fst-'+fid).textContent='Empty';$('fst-'+fid).className='bdg br';return;}
+  finishParse(Object.keys(rows[0]),rows,fid,file.name);
+}
+function finishParse(headers,rows,fid,fname){
+  pendingHeaders=headers;pendingRows=rows;
+  if($('fpb-'+fid))$('fpb-'+fid).style.width='100%';
+  if($('fst-'+fid)){$('fst-'+fid).textContent=`✓ ${rows.length} rows`;$('fst-'+fid).className='bdg bg';}
+  buildColMap(headers);showPreview(headers,rows.slice(0,8));
+  if($('import-btn'))$('import-btn').textContent=`⬇ Import ${rows.length} Rows`;
+}
+function buildColMap(headers){
+  const hlo=headers.map(h=>h.toLowerCase());
+  const find=keys=>{const i=hlo.findIndex(h=>keys.some(k=>h.includes(k)));return i>=0?headers[i]:null;};
+  colMap={
+    name:find(['task name','task','name','title','subject','description','activity','work']),
+    cat:find(['category','cat','type','dept','department','group']),
+    priority:find(['priority','prio','severity','urgency']),
+    days:find(['days','duration','active days','active']),
+    progress:find(['progress','prog','completion','%','percent','done']),
+    assignedTo:find(['assigned to','assignedto','engineer','member','person','responsible']),
+    assignedBy:find(['assigned by','assignedby','spoc','supervisor','lead','manager','by']),
+    startDate:find(['start date','startdate','start','from','begin']),
+    endDate:find(['end date','enddate','end','to','finish','completed']),
+    deadline:find(['deadline','due','due date','target','target date'])
+  };
+  const fields=[['name','Task Name'],['cat','Category'],['priority','Priority'],['days','Active Days'],['progress','Progress %'],['assignedTo','Assigned To'],['assignedBy','IT SPOC'],['startDate','Start Date'],['endDate','End Date'],['deadline','Deadline']];
+  if($('col-map'))$('col-map').innerHTML=`<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:8px">${fields.map(([k,lbl])=>`<div><label style="font-size:9px;color:var(--mt);display:block;margin-bottom:2px">${lbl}</label><select class="inp" id="cm-${k}" style="width:100%"><option value="">— skip —</option>${headers.map(h=>`<option value="${h}"${colMap[k]===h?' selected':''}>${h}</option>`).join('')}</select></div>`).join('')}</div>`;
+  if($('col-map-wrap'))$('col-map-wrap').style.display='block';
+}
+function showPreview(headers,rows){
+  const h=headers.slice(0,8);
+  if($('prev-tbl'))$('prev-tbl').querySelector('thead').innerHTML='<tr>'+h.map(hh=>`<th>${hh}</th>`).join('')+'</tr>';
+  if($('prev-body'))$('prev-body').innerHTML=rows.map(r=>'<tr>'+h.map(hh=>`<td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r[hh]||''}</td>`).join('')+'</tr>').join('');
+  if($('prev-cnt'))$('prev-cnt').textContent=`${rows.length} rows · ${headers.length} columns`;
+  if($('prev-wrap'))$('prev-wrap').style.display='block';
+}
+function doImport(){
+  if(!pendingRows.length){alert('No data to import. Please select a file first.');return;}
+  // Read final mapping from selects
+  ['name','cat','priority','days','progress','assignedTo','assignedBy','startDate','endDate','deadline'].forEach(k=>{const el=$('cm-'+k);if(el)colMap[k]=el.value||null;});
+  const get=(r,k)=>colMap[k]?String(r[colMap[k]]||'').trim():'';
+  const np=p=>{const pl=(p||'').toLowerCase();return pl.includes('high')||pl.includes('urgent')?'High':pl.includes('low')||pl.includes('minor')?'Low':'Medium';};
+  const nextId=tasks.length?Math.max(...tasks.map(t=>t.id))+1:1;
+  const mapped=pendingRows.map((r,i)=>{
+    const name=get(r,'name')||`Task ${nextId+i}`;
+    const rc=get(r,'cat');const cat=rc&&ALL_CATS.includes(rc)?rc:autoCategory(name+(rc?' '+rc:''));
+    const rat=get(r,'assignedTo');const assignedTo=MEMBERS.find(m=>m.name.toLowerCase().includes((rat||'').toLowerCase().split(' ')[0])&&rat.length>1)?.name||curM().name;
+    const rab=get(r,'assignedBy');const assignedBy=SPOCS.find(s=>s.toLowerCase().includes((rab||'').toLowerCase()))&&rab.length>1?rab:rab||'';
+    const prog=Math.min(100,Math.max(0,parseInt(get(r,'progress'))||0));
+    return{id:nextId+i,name,cat,priority:np(get(r,'priority')),d:Math.max(1,parseInt(get(r,'days'))||1),progress:prog,assignedTo,assignedBy,startDate:get(r,'startDate')||'',endDate:get(r,'endDate')||'',deadline:get(r,'deadline')||''};
+  }).filter(r=>r.name&&r.name!=='Task '+(nextId));
+  tasks=[...tasks,...mapped];
+  if($('col-map-wrap'))$('col-map-wrap').style.display='none';
+  if($('prev-wrap'))$('prev-wrap').style.display='none';
+  pendingRows=[];pendingHeaders=[];
+  refreshAll();saveData();
+  alert(`✓ Imported ${mapped.length} tasks successfully!`);
+}
+
+// ── AI ANALYSIS ───────────────────────────────────────
+function fullCtx(){const ft=filt();return`TASKS(${ft.length}):\n${ft.map(t=>`"${t.name}"|${t.cat}|${t.priority}|${getDays(t)}d|Prog:${t.progress||0}%|${getStatus(t).l}|To:${t.assignedTo}|SPOC:${t.assignedBy}|Score:${ovr(t)}%`).join('\n')}\nTEAM(${MEMBERS.length}):\n${MEMBERS.map(m=>{const ts=ft.filter(t=>t.assignedTo===m.name);return`${m.name}(${ts.length}tasks,avgProg:${ts.length?Math.round(ts.reduce((a,t)=>a+(t.progress||0),0)/ts.length):0}%)`;}).join('|')}\nSPOCS:${SPOCS.join(',')}`;}
+const ASYS='You are a senior IT operations analyst for VDart GCC. 8-member team managed by Mohamed Ibrahim J (Admin). Members: Asif Muhammed A S, Jayanth S, Sundar N, Kavitha V, Beryl A, Naveen S, and Santhosh R — who is a SOC Analyst L1 working exclusively on VAPT, SOC Checklist, ManageEngine, Projects, SOPHOS, Wazuh and GOPhish tasks (distinct from the other members\' Hardware/Software/Network/Inventory categories). IT SPOCs: Ponsuthan, Ganesh, Manikandan, Gnaneswaran, John, Pradeep, Mujamil, Saravannan. Use bullet points(•), **bold headers**. Max 300 words.';
+const PROMPTS={summary:c=>'Performance summary:\n'+c,patterns:c=>'Patterns & inefficiencies:\n'+c,recs:c=>'6 actionable recommendations:\n'+c,bottlenecks:c=>'Bottlenecks & risks:\n'+c,cat:c=>'Category analysis:\n'+c,weekly:c=>'Weekly management digest (highlights, concerns, actions per member):\n'+c,team:c=>'Team performance — highlight top/bottom performers and workload distribution:\n'+c,custom:c=>`Context:\n${c}\nQuestion: ${$('ai-q')?.value?.trim()||''}`};
+async function runAI(type){
+  const out=$('ai-out');if(!out)return;
+  if(type==='custom'&&!$('ai-q')?.value?.trim())return;
+  out.innerHTML='<div class="ai-box" style="color:var(--mt)">✦ Analyzing with AI…</div>';
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:ASYS,messages:[{role:'user',content:PROMPTS[type](fullCtx())}]})});
+    const d=await r.json();
+    out.innerHTML=`<div class="ai-box">${fmt(d.content?.map(c=>c.text||'').join('')||'No response.')}</div>`;
+  }catch(e){out.innerHTML=`<div class="ai-box" style="color:${RD}">Error: ${e.message}</div>`;}
+}
+$('ai-q')?.addEventListener('keydown',e=>{if(e.key==='Enter')runAI('custom');});
+
+// ── EXPORT & DOWNLOAD ─────────────────────────────────
+function exportCSV(){
+  const rows=['ID,Name,AssignedTo,Category,Priority,Progress,Status,SPOC,StartDate,EndDate,Deadline,Score',...tasks.map(t=>`${t.id},"${t.name}","${t.assignedTo||''}",${t.cat},${t.priority},${t.progress||0}%,${getStatus(t).l},"${t.assignedBy||''}",${t.startDate||''},${t.endDate||''},${t.deadline||''},${ovr(t)}%`)];
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv'}));a.download='vdart_tasks.csv';a.click();
+}
+function dlFile(){
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['<!DOCTYPE html>\n'+document.documentElement.outerHTML],{type:'text/html'}));a.download='VDart_Team_Dashboard.html';a.click();
+}
+
+// ── MASTER REFRESH ────────────────────────────────────
+function refreshAll(){
+  updKPIs();renderMainChart();renderCatTable();renderTopBars();renderSmallCharts();renderOvTaskTable();
+  const vis=id=>$(id)&&$('pg-'+id)&&$('pg-'+id).style.display!=='none';
+  if(vis('pf'))renderPerformance();
+  if(vis('tl'))renderTimeline();
+  if(vis('tk'))renderTasks();
+  if(vis('mb'))renderMembersPage();
+  if(vis('rp'))renderReportsPage();
+}
+
+// ── INIT ──────────────────────────────────────────────
+async function init(){
+  await loadData();buildUserSel();updateUserUI();refreshAll();
+  // Auto-schedule check
+  try{const l=localStorage.getItem('vd4_last_rpt');const now=new Date();if(now.getDay()===1){const last=l?new Date(l):null;if(!last||Math.floor((now-last)/86400000)>=7)setTimeout(genAllReports,5000);}}catch(e){}
+  // Real-time refresh
+  setInterval(()=>{tick();updKPIs();},30000);
+  console.info('[VDart] Dashboard v4 ready · 8 members · Tasks: '+tasks.length);
+}
+init();
+</script>
+</body>
+</html>
