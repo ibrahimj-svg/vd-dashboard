@@ -1045,6 +1045,35 @@ async function init(){
   console.info('[VDart] Dashboard v4 ready · 8 members · Tasks: '+tasks.length);
 }
 init();
+
+// --- STEP 2: AUTHENTICATION & DATA SILO LOGIC ---
+const USER_REGISTRY = {
+    "admin": { pass: "admin123", role: "admin" },
+    "john": { pass: "john123", role: "member" }
+};
+
+// Gatekeeper: Forces Login on load
+(function checkAuth() {
+    if (!sessionStorage.getItem('user')) {
+        const u = prompt("Username:");
+        const p = prompt("Password:");
+        if (USER_REGISTRY[u] && USER_REGISTRY[u].pass === p) {
+            sessionStorage.setItem('user', u);
+            sessionStorage.setItem('role', USER_REGISTRY[u].role);
+        } else {
+            alert("Access Denied");
+            location.reload();
+        }
+    }
+})();
+
+// Personalized Data Storage Key
+function getStorageKey() {
+    const user = sessionStorage.getItem('user');
+    const role = sessionStorage.getItem('role');
+    // Admin can see everything or specifically switch, default to global or john's for now
+    return (role === 'admin') ? 'vd4_data_all' : `vd4_data_${user}`;
+}
 </script>
 </body>
 </html>
