@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>VDart GCC Portal - Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#0b0e11;color:#eaecef;display:flex;align-items:center;justify-content:center;min-height:100vh;font-size:12px}
+.card{background:#161a1e;border:1px solid rgba(255,255,255,.06);padding:28px 24px;border-radius:6px;width:100%;max-width:320px;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.logo-area{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:20px}
+.logo-box{width:26px;height:26px;background:#f0b90b;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#000}
+h2{font-size:14px;font-weight:700;color:#fff;letter-spacing:-.3px}
+.f-gp{margin-bottom:14px}
+label{display:block;font-size:10px;color:#848e9c;margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px}
+.inp{width:100%;background:#2b3139;border:1px solid rgba(255,255,255,.06);border-radius:4px;padding:8px 10px;color:#fff;font-family:'Inter',sans-serif;font-size:12px;transition:.15s}
+.inp:focus{outline:none;border-color:#0ecb81}
+.btn{width:100%;background:#0ecb81;color:#000;border:none;font-weight:600;padding:9px;border-radius:4px;cursor:pointer;font-family:'Inter',sans-serif;font-size:12px;margin-top:4px;transition:.15s}
+.btn:hover{opacity:.9}
+.err-msg{color:#f6465d;font-size:10px;margin-top:6px;text-align:center;display:none}
+</style>
+</head>
+<body>
+
+<div class="card">
+    <div class="logo-area">
+        <div class="logo-box">VD</div>
+        <div>
+            <h2>VDartinc</h2>
+            <div style="font-size:9px;color:#848e9c">GCC IT Portal</div>
+        </div>
+    </div>
+    
+    <div class="f-gp">
+        <label>Username</label>
+        <input type="text" id="uid" class="inp" placeholder="e.g., john, admin" autocomplete="off"/>
+    </div>
+    <div class="f-gp">
+        <label>Password</label>
+        <input type="password" id="pwd" class="inp" placeholder="••••••••"/>
+    </div>
+    
+    <button class="btn" onclick="handleAuth()">Sign In</button>
+    <div id="err" class="err-msg">Invalid username or password.</div>
+</div>
+
+<script>
+async function handleAuth() {
+    const u = document.getElementById('uid').value.trim().toLowerCase();
+    const p = document.getElementById('pwd').value;
+    const errEl = document.getElementById('err');
+    
+    errEl.style.display = 'none';
+    
+    try {
+        // Fetch valid users directory dynamically
+        const response = await fetch('data/users.json');
+        if (!response.ok) throw new Error("Could not load user database registry.");
+        
+        const users = await response.json();
+        
+        if (users[u] && users[u].password === p) {
+            // Establish multi-tenant user environment sessions
+            sessionStorage.setItem('currentUser', u);
+            sessionStorage.setItem('userRole', users[u].role);
+            sessionStorage.setItem('userName', users[u].name);
+            
+            window.location.href = 'index.html';
+        } else {
+            errEl.style.display = 'block';
+        }
+    } catch (e) {
+        alert('Authentication engine configuration mismatch: Check that data/users.json exists.');
+        console.error(e);
+    }
+}
+
+// Bind Enter key press to Sign In
+document.querySelectorAll('.inp').forEach(input => {
+    input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleAuth();
+    });
+});
+</script>
+</body>
+</html>
